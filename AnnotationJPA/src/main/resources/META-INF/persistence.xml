@@ -5,6 +5,7 @@
     <class>mera.annotationjpa.User</class>
     <class>mera.annotationjpa.StatIP</class>
     <class>mera.annotationjpa.Telephone</class>
+    <class>mera.annotationjpa.Pictures</class>
     <properties>
       <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver" />
       <property name="javax.persistence.jdbc.url"    value="jdbc:postgresql://localhost:5432/postgres" />
