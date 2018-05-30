@@ -21,6 +21,9 @@ public class Menu implements Serializable {
     
     @ManyToMany
     private Set<Ingredient> ingrediens = new HashSet<>();
+    
+    @ManyToMany(mappedBy="menuSh")
+    private Set<SimpleOrd> orders  = new HashSet<>();
 
     public Menu(){}
 
@@ -29,10 +32,11 @@ public class Menu implements Serializable {
         this.price = price;
     }
     
-    public Menu(String name,Integer price, Set<Ingredient> ingrediens) {
+    public Menu(String name,Integer price, Set<Ingredient> ingrediens , Set<SimpleOrd> orders) {
         this.name = name;
         this.price = price;
         this.ingrediens = ingrediens;
+        this.orders = orders;
     }
 
     public Menu(Menu s) {
@@ -40,6 +44,7 @@ public class Menu implements Serializable {
         this.name = s.getName();
         this.ingrediens = s.getIngrediens();
         this.price = s.getPrice();
+        this.orders = s.getOrders();
     }
 
     public Integer getPrice() {
@@ -82,12 +87,22 @@ public class Menu implements Serializable {
         this.ingrediens = setOfIng;
     }
 
+    public Set<SimpleOrd> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(Set<SimpleOrd> orders) {
+        this.orders = orders;
+    }
+
+    
     @Override
     public int hashCode() {
         int hash = 7;
         hash = 67 * hash + (int) (this.id ^ (this.id >>> 32));
         hash = 67 * hash + Objects.hashCode(this.name);
         hash = 67 * hash + Objects.hashCode(this.ingrediens);
+        hash = 67 * hash + Objects.hashCode(this.orders);
         return hash;
     }
 
@@ -112,11 +127,14 @@ public class Menu implements Serializable {
         if (!Objects.equals(this.ingrediens, other.ingrediens)) {
             return false;
         }
+        if (!Objects.equals(this.orders, other.orders)) {
+            return false;
+        }
         return true;
     }
 
     @Override
     public String toString() {
-        return "Menu{" + "id=" + id + ", name=" + name + ", setOfIng=" + ingrediens + '}';
+        return "Menu{" + "id=" + id + ", name=" + name + ", setOfIng=" + ingrediens +  ", ordrers=" + orders + '}';
     }
 }

@@ -19,6 +19,9 @@ public class Ingredient implements Serializable {
     @ManyToMany(mappedBy="ingrediens")
     private Set<Menu> menu  = new HashSet<>();
     
+    @ManyToMany(mappedBy="compoundSh")
+    private Set<CompoundOrd> shaurma  = new HashSet<>();
+    
     public Ingredient(){}
 
     public Ingredient(String name, Integer price) {
@@ -65,13 +68,21 @@ public class Ingredient implements Serializable {
         this.price = price;
     }
 
+    public Set<CompoundOrd> getShaurma() {
+        return shaurma;
+    }
+
+    public void setShaurma(Set<CompoundOrd> shaurma) {
+        this.shaurma = shaurma;
+    }
+
     @Override
     public int hashCode() {
-        int hash = 5;
-        hash = 47 * hash + (int) (this.id ^ (this.id >>> 32));
-        hash = 47 * hash + Objects.hashCode(this.name);
-        hash = 47 * hash + Objects.hashCode(this.price);
-        hash = 47 * hash + Objects.hashCode(this.menu);
+        int hash = 7;
+        hash = 97 * hash + Objects.hashCode(this.name);
+        hash = 97 * hash + Objects.hashCode(this.price);
+        hash = 97 * hash + Objects.hashCode(this.menu);
+        hash = 97 * hash + Objects.hashCode(this.shaurma);
         return hash;
     }
 
@@ -99,13 +110,18 @@ public class Ingredient implements Serializable {
         if (!Objects.equals(this.menu, other.menu)) {
             return false;
         }
+        if (!Objects.equals(this.shaurma, other.shaurma)) {
+            return false;
+        }
         return true;
     }
 
     @Override
     public String toString() {
-        return "Ingredient{" + "id=" + id + ", name=" + name + ", price=" + price + ", menu=" + menu + '}';
+        return "Ingredient{" + "id=" + id + ", name=" + name + ", price=" + price + ", menu=" + menu + ", shaurma=" + shaurma + '}';
     }
+
+   
 
    
  

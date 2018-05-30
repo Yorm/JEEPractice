@@ -28,6 +28,22 @@ public class DBService {
         }
     }
     
+    public <T> boolean deleteObj(T cls, Long id) {
+        T obj=null;
+        try {
+            em.getTransaction().begin();
+            obj = (T) em.find(cls.getClass(), id);
+            if (obj != null) {
+                em.remove(obj);
+            }
+            em.getTransaction().commit(); 
+        } catch (Exception ex) {
+            log.log(Level.SEVERE, "Exception: ", ex);
+            em.getTransaction().rollback();
+        }   
+        return obj!=null;
+    }
+    
     public <T> T findObj(T cls,long id) {
         T obj;
         try {

@@ -1,24 +1,29 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package mera.shaurmar.service;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Named;
 import mera.shaurmar.dao.DBService;
-import mera.shaurmar.model.Ingredient;
+import mera.shaurmar.model.Menu;
 
-@Named//?
-@ApplicationScoped
-public class IngredientService {
+/**
+ *
+ * @author dgolov
+ */
+public class MenuService {
     private Logger log;
     
     private DBService db;
 
-    public IngredientService() {
+    public MenuService() {
         db = new DBService();
         log = Logger.getLogger(IngredientService.class.getName());
     }
-    public Ingredient getOne(long id){
+    public Menu getOne(long id){
         log.log(Level.INFO,"Get one ingredient");
         return db.findObj(new Ingredient(), id);
     }
@@ -26,5 +31,4 @@ public class IngredientService {
         log.log(Level.INFO,"Del one ingredient");
         return db.deleteObj(new Ingredient(), id);
     }
-    
 }
