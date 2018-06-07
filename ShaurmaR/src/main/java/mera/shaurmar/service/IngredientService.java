@@ -7,16 +7,22 @@ import javax.inject.Named;
 import mera.shaurmar.dao.DBService;
 import mera.shaurmar.model.Ingredient;
 
-@Named//?
+@Named
 @ApplicationScoped
-public class IngredientService {
-    private Logger log;
-    
-    private DBService db;
+public class IngredientService  extends Service{
 
-    public IngredientService() {
-        db = new DBService();
+    public IngredientService() { 
         log = Logger.getLogger(IngredientService.class.getName());
+        db = new DBService();
+    }
+    
+    public Ingredient saveOne(Ingredient ing){
+        log.log(Level.INFO,"Save one ingredient");
+        return (Ingredient)db.saveObj(ing);
+    }
+    public Ingredient updateOne(Ingredient ing){
+        log.log(Level.INFO,"Update one ingredient");
+        return (Ingredient)db.updateObj(ing, ing.getId());
     }
     public Ingredient getOne(long id){
         log.log(Level.INFO,"Get one ingredient");
@@ -25,6 +31,5 @@ public class IngredientService {
     public boolean delOne(long id){
         log.log(Level.INFO,"Del one ingredient");
         return db.deleteObj(new Ingredient(), id);
-    }
-    
+    }  
 }

@@ -1,5 +1,6 @@
 package mera.shaurmar.dao;
 
+import java.util.List;
 import java.util.logging.*;
 import javax.persistence.EntityManager;
 import mera.shaurmar.model.*;
@@ -16,16 +17,46 @@ public class DBService {
         log.info("DBService started");
     }
     
-    public void saveObj(Object obj) {
+    public Object saveObj(Object obj) {
         try {
             em.getTransaction().begin();
             em.merge(obj);
             em.getTransaction().commit();
             log.info(obj.getClass() + " merged");
+            return obj;
         } catch (Exception ex) {
             log.log(Level.SEVERE, "Exception: ", ex);
             em.getTransaction().rollback();
+            return null;
         }
+    }
+    
+    public <T> T updateObj(T cls,long id) {
+        try {
+            em.getTransaction().begin();
+            em.merge(cls);
+            em.getTransaction().commit();  
+            return cls;
+        } catch (Exception ex) {
+            log.log(Level.SEVERE, "Exception: ", ex);
+            em.getTransaction().rollback();
+            return null;
+        }
+    }
+    
+    public <T> T findObj(T cls,long id) {
+        T obj;
+        try {
+            em.getTransaction().begin();
+            obj = (T) em.find(cls.getClass(), id);
+            log.log(Level.INFO, "Find: " + obj);
+            em.getTransaction().commit(); 
+        } catch (Exception ex) {
+            obj=null;
+            log.log(Level.SEVERE, "Exception: ", ex);
+            em.getTransaction().rollback();
+        }
+        return obj;
     }
     
     public <T> boolean deleteObj(T cls, Long id) {
@@ -44,18 +75,34 @@ public class DBService {
         return obj!=null;
     }
     
-    public <T> T findObj(T cls,long id) {
-        T obj;
+    public Menu saveMenu(Menu m)  {
+        
+        {
+            List<Menu> menuRes = em.createQuery("SELECT name FROM Menu name", Menu.class).getResultList();    
+            for(int i=0; i<menuRes.size();i++){
+                if(m.getName().compareTo(menuRes.get(i).getName())==0){
+                        log.log(Level.SEVERE, "menu "+m.getName()+" already exists");
+                        return new Menu("already exists",404);
+                }
+            }
+        }
+        
+        List<Ingredient> ingRes = em.createQuery("SELECT name FROM Ingredient name", Ingredient.class).getResultList();    
+        for(int i=0; i<m.getIngredients().size();i++){
+            for(int j=0; j<ingRes.size();j++){
+                if(m.getIngredients().get(i).getName().compareTo(ingRes.get(j).getName())==0){
+                    m.getIngredients().get(i).setId(ingRes.get(j).getId());
+                }     
+            } 
+        }
         try {
             em.getTransaction().begin();
-            obj = (T) em.find(cls.getClass(), id);
-            log.log(Level.INFO, "Find: " + obj);
-            em.getTransaction().commit(); 
+            em.merge(m);
+            em.getTransaction().commit();
         } catch (Exception ex) {
-            obj=null;
             log.log(Level.SEVERE, "Exception: ", ex);
             em.getTransaction().rollback();
         }
-        return obj;
+        return m;
     }
 }

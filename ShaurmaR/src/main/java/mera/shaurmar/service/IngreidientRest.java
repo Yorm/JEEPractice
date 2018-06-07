@@ -11,7 +11,6 @@ import mera.shaurmar.model.Ingredient;
 @Stateless
 @Path("/ingreidient")
 public class IngreidientRest {
-    
     @Inject
     IngredientService ingServ;
     
@@ -20,31 +19,40 @@ public class IngreidientRest {
     @Produces("application/json")
     public String getIngredient(@QueryParam("id") long id){   
         return "Ingredient["+id+"]:" + ingServ.getOne(id);
-    }//http://localhost:8080/ShaurmaR/ingreidient/id?id=1
-    
+    }//http://localhost:8080/ShaurmaR/ingreidient/get?id=1
     
     @POST 
     @Path("/addIng") 
     @Consumes("application/json") 
-    public String addIngredient(Ingredient ing){
-        System.out.println("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
-           System.out.println("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
-              System.out.println("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
-        System.out.println(ing);
-        return "sdf";
+    public String addIngredient(Ingredient ing){    
+        return ingServ.saveOne(ing)+" saved";
+    }/* 
+    http://localhost:8080/ShaurmaR/ingreidient/addIng
+    {
+        "id":100,
+        "name":"TEST_ING",
+        "price":767,
+        "menu":[]
+        "shaurma":[]
     }
-    /*
+    */
+    
     @PUT 
     @Path("/putIng") 
     @Consumes("application/json") 
     public String upIngredient(Ingredient ing){
-        System.out.println("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
-           System.out.println("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
-              System.out.println("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
-        System.out.println(ing);
-        return "sdf";
+        return ingServ.updateOne(ing)+" update";
+    }/*
+    http://localhost:8080/ShaurmaR/ingreidient/putIng
+    {
+        "id":100,
+        "name":"TEST_ING_UPDATE",
+        "price":767,
+        "menu":[]
+        "shaurma":[]
     }
     */
+    
     
     @DELETE
     @Path("/del")
@@ -54,12 +62,7 @@ public class IngreidientRest {
     }//http://localhost:8080/ShaurmaR/ingreidient/del?id=31
 }
 /*
-{
-  "id":"10",
-  "name":"Cheese Lavash",
-  "price":"15",
-  "menu":"null"
-}
+
 //Методы POST и PUT должны возвращать обратно объект, который они изменили или создали, — это позволит сократить время обращения к сервису вдвое.
 //TODO Объединить ресты
 POST – создать новую сущность

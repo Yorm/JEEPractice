@@ -1,7 +1,9 @@
 package mera.shaurmar.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import javax.persistence.*;
@@ -16,8 +18,8 @@ public class Ingredient implements Serializable {
     private String name;
     private Integer price;
     
-    @ManyToMany(mappedBy="ingrediens")
-    private Set<Menu> menu  = new HashSet<>();
+    @ManyToMany(mappedBy="ingredients",cascade = CascadeType.MERGE)
+    private List<Menu> menu  = new ArrayList<>();
     
     @ManyToMany(mappedBy="compoundSh")
     private Set<CompoundOrd> shaurma  = new HashSet<>();
@@ -35,14 +37,15 @@ public class Ingredient implements Serializable {
         this.price = i.getPrice();
         this.menu = i.getMenu();
     }
-    
-    public Set<Menu> getMenu() {
+
+    public List<Menu> getMenu() {
         return menu;
     }
 
-    public void setMenu(Set<Menu> menu) {
+    public void setMenu(List<Menu> menu) {
         this.menu = menu;
     }
+    
 
     public long getId() {
         return id;
@@ -79,12 +82,15 @@ public class Ingredient implements Serializable {
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 97 * hash + Objects.hashCode(this.name);
-        hash = 97 * hash + Objects.hashCode(this.price);
-        hash = 97 * hash + Objects.hashCode(this.menu);
-        hash = 97 * hash + Objects.hashCode(this.shaurma);
+        hash = 67 * hash + (int) (this.id ^ (this.id >>> 32));
+        hash = 67 * hash + Objects.hashCode(this.name);
+        hash = 67 * hash + Objects.hashCode(this.price);
+        hash = 67 * hash + Objects.hashCode(this.menu);
+        hash = 67 * hash + Objects.hashCode(this.shaurma);
         return hash;
     }
+
+
 
     @Override
     public boolean equals(Object obj) {

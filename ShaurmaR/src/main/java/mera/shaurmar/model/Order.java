@@ -37,7 +37,7 @@ public abstract class Order implements Serializable {
 
     protected String note;
     
-    protected Integer sum;
+    protected Integer sum;//TODO
     
     public Order (){
         System.out.println("jav.Order.<init>()");
