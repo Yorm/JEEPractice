@@ -18,13 +18,14 @@ public class Menu implements Serializable {
     
     private String name;
     
-    private Integer price;
+    private float price;
     
     @ManyToMany(cascade = CascadeType.MERGE,fetch = FetchType.EAGER)
     private List<Ingredient> ingredients = new ArrayList<>();
     
-    @ManyToMany(mappedBy="menuSh")
-    private Set<SimpleOrd> orders  = new HashSet<>();
+    @OneToMany(mappedBy="menu")
+    private List<SimpleOrd_Menu> orders = new ArrayList<>();;
+
 
     public Menu(){}
 
@@ -33,7 +34,7 @@ public class Menu implements Serializable {
         this.price = price;
     }
     
-    public Menu(String name,Integer price, List<Ingredient> ingredients, Set<SimpleOrd> orders) {
+    public Menu(String name,Integer price, List<Ingredient> ingredients, List<SimpleOrd_Menu> orders) {
         this.name = name;
         this.price = price;
         this.ingredients = ingredients;
@@ -48,11 +49,11 @@ public class Menu implements Serializable {
         this.orders = s.getOrders();
     }
 
-    public Integer getPrice() {
+    public float getPrice() {
         return price;
     }
 
-    public void setPrice(Integer price) {
+    public void setPrice(float price) {
         this.price = price;
     }
     
@@ -88,11 +89,11 @@ public class Menu implements Serializable {
         this.ingredients = ingredients;
     }   
 
-    public Set<SimpleOrd> getOrders() {
+    public List<SimpleOrd_Menu> getOrders() {
         return orders;
     }
 
-    public void setOrders(Set<SimpleOrd> orders) {
+    public void setOrders(List<SimpleOrd_Menu> orders) {
         this.orders = orders;
     }
 

@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package mera.shaurmar.service;
 
 import java.util.logging.Level;
@@ -11,6 +7,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
 import mera.shaurmar.dao.DBService;
 import mera.shaurmar.model.Menu;
+import mera.shaurmar.dto.MenuDTO;
 
 @Named
 @ApplicationScoped
@@ -20,20 +17,26 @@ public class MenuService  extends Service{
         log = Logger.getLogger(MenuService.class.getName());
         db = new DBService();
     }
-    public Menu saveOne(Menu sh){
-        log.log(Level.INFO,"Save one menu pos");
+    public Menu saveMenu(MenuDTO shDto){
+        
+        Menu sh = new Menu();
+        sh.setIngredients(shDto.getIngredient());
+        sh.setName(shDto.name);
+        sh.setPrice(shDto.getPrice());
+        
+        log.log(Level.INFO,"Save menu pos");
         return db.saveMenu(sh);
     }
-    public Menu updateOne(Menu sh){
-        log.log(Level.INFO,"Update one menu pos");
+    public Menu updateMenu(Menu sh){
+        log.log(Level.INFO,"Update menu pos");
         return (Menu)db.updateObj(sh, sh.getId());
     }
-    public Menu getOne(long id){
-        log.log(Level.INFO,"Get one menu pos");
+    public Menu getMenu(Long id){
+        log.log(Level.INFO,"Get menu pos");
         return db.findObj(new Menu(), id);
     }
-    public boolean delOne(long id){
-        log.log(Level.INFO,"Del one menu pos");
+    public boolean delMenu(Long id){
+        log.log(Level.INFO,"Del menu pos");
         return db.deleteObj(new Menu(), id);
     }
 }

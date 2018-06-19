@@ -16,17 +16,17 @@ public class Ingredient implements Serializable {
     @Column(name = "ingid")
     private long id;
     private String name;
-    private Integer price;
+    private Float price;
     
     @ManyToMany(mappedBy="ingredients",cascade = CascadeType.MERGE)
     private List<Menu> menu  = new ArrayList<>();
     
-    @ManyToMany(mappedBy="compoundSh")
-    private Set<CompoundOrd> shaurma  = new HashSet<>();
+    @OneToMany(mappedBy="ing")
+    private List<CompoundOrd_Ingredient> shaurma = new ArrayList<>();;
     
     public Ingredient(){}
 
-    public Ingredient(String name, Integer price) {
+    public Ingredient(String name, Float price) {
         this.name = name;
         this.price = price;
     }
@@ -63,21 +63,23 @@ public class Ingredient implements Serializable {
         this.name = name;
     }
 
-    public Integer getPrice() {
+    public Float getPrice() {
         return price;
     }
 
-    public void setPrice(Integer price) {
+    public void setPrice(Float price) {
         this.price = price;
     }
 
-    public Set<CompoundOrd> getShaurma() {
+    public List<CompoundOrd_Ingredient> getShaurma() {
         return shaurma;
     }
 
-    public void setShaurma(Set<CompoundOrd> shaurma) {
+    public void setShaurma(List<CompoundOrd_Ingredient> shaurma) {
         this.shaurma = shaurma;
     }
+
+
 
     @Override
     public int hashCode() {

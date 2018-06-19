@@ -75,8 +75,7 @@ public class DBService {
         return obj!=null;
     }
     
-    public Menu saveMenu(Menu m)  {
-        
+    public Menu saveMenu(Menu m)  { 
         {
             List<Menu> menuRes = em.createQuery("SELECT name FROM Menu name", Menu.class).getResultList();    
             for(int i=0; i<menuRes.size();i++){
@@ -86,7 +85,6 @@ public class DBService {
                 }
             }
         }
-        
         List<Ingredient> ingRes = em.createQuery("SELECT name FROM Ingredient name", Ingredient.class).getResultList();    
         for(int i=0; i<m.getIngredients().size();i++){
             for(int j=0; j<ingRes.size();j++){
@@ -104,5 +102,26 @@ public class DBService {
             em.getTransaction().rollback();
         }
         return m;
+    }
+    public Ingredient saveIngredient(Ingredient ing)  {  
+        {
+            List<Ingredient> ingRes = em.createQuery("SELECT name FROM Ingredient name", Ingredient.class).getResultList();    
+            for(int i=0; i<ingRes.size();i++){
+                if(ing.getName().compareTo(ingRes.get(i).getName())==0){
+                        log.log(Level.SEVERE, "ingredient "+ing.getName()+" already exists");
+                        return new Ingredient("already exists",404f);
+                }
+            }
+        }
+        
+        try {
+            em.getTransaction().begin();
+            em.merge(ing);
+            em.getTransaction().commit();
+        } catch (Exception ex) {
+            log.log(Level.SEVERE, "Exception: ", ex);
+            em.getTransaction().rollback();
+        }
+        return ing;
     }
 }

@@ -1,8 +1,11 @@
-mera\shaurmar\service\IngredientService.class
-mera\shaurmar\service\Main.class
-mera\shaurmar\dao\DBService.class
-mera\shaurmar\service\IngreidientRest.class
-mera\shaurmar\model\Order.class
+mera\shaurmar\model\SimpleOrd.class
 mera\shaurmar\model\Ingredient.class
-mera\shaurmar\dao\EntityManagerUtil.class
+mera\shaurmar\model\Status.class
+mera\shaurmar\model\CompoundOrd_Ingredient.class
+mera\shaurmar\dao\DBService.class
+mera\shaurmar\model\MainOrder.class
+mera\shaurmar\model\SimpleOrd_Menu.class
+mera\shaurmar\model\COI_Key.class
+mera\shaurmar\model\CompoundOrd.class
 mera\shaurmar\model\Menu.class
+mera\shaurmar\service\Service.class

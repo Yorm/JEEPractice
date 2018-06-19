@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
 import mera.shaurmar.dao.DBService;
+import mera.shaurmar.dto.IngredientDTO;
 import mera.shaurmar.model.Ingredient;
 
 @Named
@@ -16,20 +17,20 @@ public class IngredientService  extends Service{
         db = new DBService();
     }
     
-    public Ingredient saveOne(Ingredient ing){
-        log.log(Level.INFO,"Save one ingredient");
-        return (Ingredient)db.saveObj(ing);
+    public Ingredient saveIng(IngredientDTO ingDto){
+        log.log(Level.INFO,"Save ingredient");
+        return db.saveIngredient(new Ingredient(ingDto.name, ingDto.price));
     }
-    public Ingredient updateOne(Ingredient ing){
-        log.log(Level.INFO,"Update one ingredient");
+    public Ingredient updateIng(Ingredient ing){
+        log.log(Level.INFO,"Update ingredient");
         return (Ingredient)db.updateObj(ing, ing.getId());
     }
-    public Ingredient getOne(long id){
-        log.log(Level.INFO,"Get one ingredient");
+    public Ingredient getIng(long id){
+        log.log(Level.INFO,"Get ingredient");
         return db.findObj(new Ingredient(), id);
     }
-    public boolean delOne(long id){
-        log.log(Level.INFO,"Del one ingredient");
+    public boolean delIng(long id){
+        log.log(Level.INFO,"Del ingredient");
         return db.deleteObj(new Ingredient(), id);
     }  
 }

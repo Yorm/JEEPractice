@@ -5,50 +5,49 @@ import javax.ws.rs.*;
 
 import javax.ws.rs.Path;
 import javax.inject.Inject;
-import javax.ws.rs.core.MediaType;
+import mera.shaurmar.dto.IngredientDTO;
 import mera.shaurmar.model.Ingredient;
 
 @Stateless
 @Path("/ingreidient")
+@Produces("application/json")
+@Consumes("application/json") 
 public class IngreidientRest {
     @Inject
     IngredientService ingServ;
     
     @GET
     @Path("/get")
-    @Produces("application/json")
     public String getIngredient(@QueryParam("id") long id){   
-        return "Ingredient["+id+"]:" + ingServ.getOne(id);
+        return "Ingredient["+id+"]:" + ingServ.getIng(id);
     }//http://localhost:8080/ShaurmaR/ingreidient/get?id=1
     
     @POST 
     @Path("/addIng") 
-    @Consumes("application/json") 
-    public String addIngredient(Ingredient ing){    
-        return ingServ.saveOne(ing)+" saved";
+    public String addIngredient(IngredientDTO ingDto){    
+        return ingServ.saveIng(ingDto)+" saved";
     }/* 
     http://localhost:8080/ShaurmaR/ingreidient/addIng
     {
-        "id":100,
-        "name":"TEST_ING",
-        "price":767,
-        "menu":[]
-        "shaurma":[]
+      "id":100,
+      "name":"TEST_ING",
+      "price":767,
+      "menu":null,
+      "shaurma":null
     }
     */
     
     @PUT 
     @Path("/putIng") 
-    @Consumes("application/json") 
     public String upIngredient(Ingredient ing){
-        return ingServ.updateOne(ing)+" update";
+        return ingServ.updateIng(ing)+" update";
     }/*
     http://localhost:8080/ShaurmaR/ingreidient/putIng
     {
         "id":100,
         "name":"TEST_ING_UPDATE",
         "price":767,
-        "menu":[]
+        "menu":[],
         "shaurma":[]
     }
     */
@@ -56,9 +55,8 @@ public class IngreidientRest {
     
     @DELETE
     @Path("/del")
-    @Produces("application/json")
     public String delIngredient(@QueryParam("id") long id){  
-        return ingServ.delOne(id)+" ";
+        return ingServ.delIng(id)+" ";
     }//http://localhost:8080/ShaurmaR/ingreidient/del?id=31
 }
 /*

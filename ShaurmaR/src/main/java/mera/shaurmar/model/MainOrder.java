@@ -1,107 +1,109 @@
+
 package mera.shaurmar.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
+import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
-
+//@MappedSuperclass
 @Entity
-@DiscriminatorValue(value="simple")
-public class SimpleOrd extends MainOrder implements Serializable{
+@Inheritance( strategy = InheritanceType.SINGLE_TABLE )
+@DiscriminatorColumn(name="dtype")
+@SequenceGenerator(name="ord_seq",
+        sequenceName="ord_seq", 
+        allocationSize=1,initialValue = 1)
+public abstract class MainOrder implements Serializable {//TODO classname
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="ord_seq")
+    @Column(name = "ordid")
+    protected long id;
     
-    @OneToMany(mappedBy="simpleord")
-    private List<SimpleOrd_Menu> menuSh = new ArrayList<>();;
+    @Enumerated(EnumType.STRING)
+    protected Status status = Status.NEW;
     
-    public SimpleOrd(){
+    @Temporal(TemporalType.TIMESTAMP)
+    protected java.util.Date creationDate;
+    
+    protected String buyer;//todo new class?
+
+    protected String note;//todo new class?
+    
+    protected Integer price;//TODO price //todo new class?
+    
+    public MainOrder (){
+        System.out.println("jav.Order.<init>()");
     }
-    
-    public SimpleOrd(Date creationDate, String buyer, String note, Integer price, Status status, List<SimpleOrd_Menu> menuSh) {
+
+    public MainOrder(Date creationDate, String buyer, String note, Integer price, Status status) {
         this.creationDate = creationDate;
         this.buyer = buyer;
         this.note = note;
         this.price = price;
         this.status = status;
-        this.menuSh = menuSh;
     }
-
-    public List<SimpleOrd_Menu> getMenuSh() {
-        return menuSh;
-    }
-
-    public void setMenuSh(List<SimpleOrd_Menu> menuSh) {
-        this.menuSh = menuSh;
-    }
+ 
     
-    @Override
     public Date getCreationDate() {
         return creationDate;
     }
 
-    @Override
     public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
     }
 
-    @Override
     public String getBuyer() {
         return buyer;
     }
 
-    @Override
     public void setBuyer(String buyer) {
         this.buyer = buyer;
     }
 
-    @Override
     public String getNote() {
         return note;
     }
 
-    @Override
     public void setNote(String note) {
         this.note = note;
     }
 
-    @Override
     public Integer getPrice() {
         return price;
     }
 
-    @Override
     public void setPrice(Integer price) {
         this.price = price;
     }
 
-    @Override
     public long getId() {
         return id;
     }
 
-    @Override
     public void setId(long id) {
         this.id = id;
     }
 
-    @Override
+   
+
     public Status getStatus() {
         return status;
     }
 
-    @Override
     public void setStatus(Status status) {
         this.status = status;
     }
-
+    
+    
 }
