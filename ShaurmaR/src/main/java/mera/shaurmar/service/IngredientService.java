@@ -21,16 +21,23 @@ public class IngredientService  extends Service{
         log.log(Level.INFO,"Save ingredient");
         return db.saveIngredient(new Ingredient(ingDto.name, ingDto.price));
     }
-    public Ingredient updateIng(Ingredient ing){
+    public Ingredient updateIng(IngredientDTO ingDto){
+        Ingredient ing = new Ingredient();
+        ing.setId(ingDto.id);
+        ing.setName(ingDto.name);
+        ing.setPrice(ingDto.price);
+        ing.setMenu(ingDto.getMenu());
+        ing.setShaurma(ingDto.getShaurma());
+        
         log.log(Level.INFO,"Update ingredient");
         return (Ingredient)db.updateObj(ing, ing.getId());
     }
-    public Ingredient getIng(long id){
+    public Ingredient getIng(Long id){
         log.log(Level.INFO,"Get ingredient");
         return db.findObj(new Ingredient(), id);
     }
-    public boolean delIng(long id){
-        log.log(Level.INFO,"Del ingredient");
+    public boolean delIng(Long id){
+        log.log(Level.INFO,"Delete ingredient");
         return db.deleteObj(new Ingredient(), id);
     }  
 }

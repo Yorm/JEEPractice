@@ -5,6 +5,8 @@ import java.io.Serializable;
 
 
 public class SOM_Key implements Serializable{
+    private static final long serialVersionUID = 8L;
+    
     private long menuId;
     private long simpleordId;
 

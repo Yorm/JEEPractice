@@ -24,7 +24,9 @@ import javax.persistence.TemporalType;
 @SequenceGenerator(name="ord_seq",
         sequenceName="ord_seq", 
         allocationSize=1,initialValue = 1)
-public abstract class MainOrder implements Serializable {//TODO classname
+public abstract class MainOrder implements Serializable {
+    private static final long serialVersionUID = 5L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="ord_seq")
     @Column(name = "ordid")

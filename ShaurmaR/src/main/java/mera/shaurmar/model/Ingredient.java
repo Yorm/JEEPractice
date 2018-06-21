@@ -11,12 +11,17 @@ import javax.persistence.*;
 @Entity
 @SequenceGenerator(name="ing_seq",sequenceName="ing_seq", allocationSize=1,initialValue = 1)
 public class Ingredient implements Serializable {
+    private static final long serialVersionUID = 1L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="ing_seq")
     @Column(name = "ingid")
-    private long id;
+    private Long id;
     private String name;
     private Float price;
+    
+    @ManyToMany(mappedBy="additivs",cascade = CascadeType.MERGE)
+    private List<SimpleOrd_Menu> simpleOrd  = new ArrayList<>();
     
     @ManyToMany(mappedBy="ingredients",cascade = CascadeType.MERGE)
     private List<Menu> menu  = new ArrayList<>();
@@ -47,11 +52,11 @@ public class Ingredient implements Serializable {
     }
     
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -79,20 +84,25 @@ public class Ingredient implements Serializable {
         this.shaurma = shaurma;
     }
 
+    public List<SimpleOrd_Menu> getSimpleOrd() {
+        return simpleOrd;
+    }
 
+    public void setSimpleOrd(List<SimpleOrd_Menu> simpleOrd) {
+        this.simpleOrd = simpleOrd;
+    }
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 67 * hash + (int) (this.id ^ (this.id >>> 32));
-        hash = 67 * hash + Objects.hashCode(this.name);
-        hash = 67 * hash + Objects.hashCode(this.price);
-        hash = 67 * hash + Objects.hashCode(this.menu);
-        hash = 67 * hash + Objects.hashCode(this.shaurma);
+        int hash = 3;
+        hash = 59 * hash + Objects.hashCode(this.id);
+        hash = 59 * hash + Objects.hashCode(this.name);
+        hash = 59 * hash + Objects.hashCode(this.price);
+        hash = 59 * hash + Objects.hashCode(this.simpleOrd);
+        hash = 59 * hash + Objects.hashCode(this.menu);
+        hash = 59 * hash + Objects.hashCode(this.shaurma);
         return hash;
     }
-
-
 
     @Override
     public boolean equals(Object obj) {
@@ -106,13 +116,16 @@ public class Ingredient implements Serializable {
             return false;
         }
         final Ingredient other = (Ingredient) obj;
-        if (this.id != other.id) {
-            return false;
-        }
         if (!Objects.equals(this.name, other.name)) {
             return false;
         }
+        if (!Objects.equals(this.id, other.id)) {
+            return false;
+        }
         if (!Objects.equals(this.price, other.price)) {
+            return false;
+        }
+        if (!Objects.equals(this.simpleOrd, other.simpleOrd)) {
             return false;
         }
         if (!Objects.equals(this.menu, other.menu)) {
@@ -126,11 +139,11 @@ public class Ingredient implements Serializable {
 
     @Override
     public String toString() {
-        return "Ingredient{" + "id=" + id + ", name=" + name + ", price=" + price + ", menu=" + menu + ", shaurma=" + shaurma + '}';
+        return "Ingredient{" + "id=" + id + ", name=" + name + ", price=" + price + ", simpleOrd=" + simpleOrd + ", menu=" + menu + ", shaurma=" + shaurma + '}';
     }
 
-   
 
-   
- 
+
+
+
 }

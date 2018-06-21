@@ -36,7 +36,7 @@ public class MenuService  extends Service{
         return db.findObj(new Menu(), id);
     }
     public boolean delMenu(Long id){
-        log.log(Level.INFO,"Del menu pos");
+        log.log(Level.INFO,"Delete menu pos");
         return db.deleteObj(new Menu(), id);
     }
 }

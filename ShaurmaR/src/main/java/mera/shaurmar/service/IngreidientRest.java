@@ -18,46 +18,46 @@ public class IngreidientRest {
     
     @GET
     @Path("/get")
-    public String getIngredient(@QueryParam("id") long id){   
+    public String getIngredient(@QueryParam("id") Long id){   
         return "Ingredient["+id+"]:" + ingServ.getIng(id);
     }//http://localhost:8080/ShaurmaR/ingreidient/get?id=1
+    
+    @DELETE
+    @Path("/del")
+    public String delIngredient(@QueryParam("id") Long id){  
+        return ingServ.delIng(id)+" ";
+    }//http://localhost:8080/ShaurmaR/ingreidient/del?id=1
     
     @POST 
     @Path("/addIng") 
     public String addIngredient(IngredientDTO ingDto){    
         return ingServ.saveIng(ingDto)+" saved";
-    }/* 
-    http://localhost:8080/ShaurmaR/ingreidient/addIng
-    {
-      "id":100,
-      "name":"TEST_ING",
-      "price":767,
-      "menu":null,
-      "shaurma":null
-    }
+    }/* http://localhost:8080/ShaurmaR/ingreidient/addIng
+        {
+            "id":100,
+            "name":"TEST_ING",
+            "price":767,
+            "menu":null,
+            "shaurma":null
+        }
     */
     
     @PUT 
     @Path("/putIng") 
-    public String upIngredient(Ingredient ing){
-        return ingServ.updateIng(ing)+" update";
-    }/*
-    http://localhost:8080/ShaurmaR/ingreidient/putIng
-    {
-        "id":100,
-        "name":"TEST_ING_UPDATE",
-        "price":767,
-        "menu":[],
-        "shaurma":[]
-    }
+    public String upIngredient(IngredientDTO ingDto){
+        return ingServ.updateIng(ingDto)+" update";
+    }/*http://localhost:8080/ShaurmaR/ingreidient/putIng
+        {
+            "id":100,
+            "name":"TEST_ING_UPDATE",
+            "price":767,
+            "menu":[],
+            "shaurma":[]
+        }
     */
     
     
-    @DELETE
-    @Path("/del")
-    public String delIngredient(@QueryParam("id") long id){  
-        return ingServ.delIng(id)+" ";
-    }//http://localhost:8080/ShaurmaR/ingreidient/del?id=31
+
 }
 /*
 

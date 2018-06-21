@@ -24,9 +24,9 @@ public class MenuRest {
     
     @DELETE
     @Path("/del")
-    public String delMenu(@QueryParam("id") long id){  
+    public String delMenu(@QueryParam("id") Long id){  
         return menuServ.delMenu(id)+" ";
-    }//http://localhost:8080/ShaurmaR/menu/del?id=31
+    }//http://localhost:8080/ShaurmaR/menu/del?id=1
     
     @POST 
     @Path("/addMenu") 

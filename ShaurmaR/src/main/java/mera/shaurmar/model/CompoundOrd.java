@@ -11,6 +11,7 @@ import javax.persistence.OneToMany;
 @Entity
 @DiscriminatorValue(value="compound")
 public class CompoundOrd extends MainOrder implements Serializable{
+    private static final long serialVersionUID = 4L;
 
     @OneToMany(mappedBy="compoundord")
     private List<CompoundOrd_Ingredient> ingredients = new ArrayList<>();;

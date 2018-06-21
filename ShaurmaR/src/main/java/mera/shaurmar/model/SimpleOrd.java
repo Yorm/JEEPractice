@@ -20,6 +20,7 @@ import javax.persistence.OneToOne;
 @Entity
 @DiscriminatorValue(value="simple")
 public class SimpleOrd extends MainOrder implements Serializable{
+    private static final long serialVersionUID = 3L;
     
     @OneToMany(mappedBy="simpleord")
     private List<SimpleOrd_Menu> menuSh = new ArrayList<>();;

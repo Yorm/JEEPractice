@@ -15,6 +15,8 @@ import javax.persistence.Table;
 @Table(name="compoundord_ingredient")
 @IdClass(COI_Key.class)
 public class CompoundOrd_Ingredient implements Serializable {
+    private static final long serialVersionUID = 6L;
+    
     @Id
     private Long ingredientId;
     @Id

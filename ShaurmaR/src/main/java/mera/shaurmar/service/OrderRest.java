@@ -49,7 +49,7 @@ public class OrderRest {
     }
     */
     
-    https://dzone.com/articles/what-is-serialversionuid
+    //https://dzone.com/articles/what-is-serialversionuid
     
     @POST 
     @Path("/addCom") 

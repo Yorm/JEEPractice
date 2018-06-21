@@ -6,11 +6,18 @@
 package mera.shaurmar.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
@@ -19,6 +26,8 @@ import javax.persistence.Table;
 @Table(name="simpleord_menu")
 @IdClass(SOM_Key.class)
 public class SimpleOrd_Menu implements Serializable{
+    private static final long serialVersionUID = 9L;
+    
     @Id
     private long menuId;
     @Id
@@ -26,6 +35,13 @@ public class SimpleOrd_Menu implements Serializable{
     
     @Column(name="count")
     private int count;
+    
+    @Column(name="size")
+    @Enumerated(EnumType.STRING)
+    private ShaurmaSize shaurmaSize;
+    
+    @ManyToMany(cascade = CascadeType.MERGE,fetch = FetchType.EAGER)
+    private List<Ingredient> additivs  = new ArrayList<>();
     
     public SimpleOrd_Menu(){}
     
@@ -78,6 +94,31 @@ public class SimpleOrd_Menu implements Serializable{
     public void setSimpleord(SimpleOrd simpleord) {
         this.simpleord = simpleord;
     }
+
+    public ShaurmaSize getSize() {
+        return shaurmaSize;
+    }
+
+    public void setSize(ShaurmaSize size) {
+        this.shaurmaSize = size;
+    }
+
+    public ShaurmaSize getShaurmaSize() {
+        return shaurmaSize;
+    }
+
+    public void setShaurmaSize(ShaurmaSize shaurmaSize) {
+        this.shaurmaSize = shaurmaSize;
+    }
+
+    public List<Ingredient> getAdditivs() {
+        return additivs;
+    }
+
+    public void setAdditivs(List<Ingredient> additivs) {
+        this.additivs = additivs;
+    }
+    
     
     
 }

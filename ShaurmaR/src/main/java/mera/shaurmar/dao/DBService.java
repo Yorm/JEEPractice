@@ -3,6 +3,7 @@ package mera.shaurmar.dao;
 import java.util.List;
 import java.util.logging.*;
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import mera.shaurmar.model.*;
 
 
@@ -22,7 +23,7 @@ public class DBService {
             em.getTransaction().begin();
             em.merge(obj);
             em.getTransaction().commit();
-            log.info(obj.getClass() + " merged");
+            log.log(Level.INFO, "merged "+ obj.getClass());
             return obj;
         } catch (Exception ex) {
             log.log(Level.SEVERE, "Exception: ", ex);
@@ -81,7 +82,7 @@ public class DBService {
             for(int i=0; i<menuRes.size();i++){
                 if(m.getName().compareTo(menuRes.get(i).getName())==0){
                         log.log(Level.SEVERE, "menu "+m.getName()+" already exists");
-                        return new Menu("already exists",404);
+                        return new Menu("already exists",404f);
                 }
             }
         }
@@ -104,14 +105,12 @@ public class DBService {
         return m;
     }
     public Ingredient saveIngredient(Ingredient ing)  {  
-        {
-            List<Ingredient> ingRes = em.createQuery("SELECT name FROM Ingredient name", Ingredient.class).getResultList();    
-            for(int i=0; i<ingRes.size();i++){
-                if(ing.getName().compareTo(ingRes.get(i).getName())==0){
-                        log.log(Level.SEVERE, "ingredient "+ing.getName()+" already exists");
-                        return new Ingredient("already exists",404f);
-                }
-            }
+        Query query = em.createQuery("Select ing FROM Ingredient ing WHERE ing.name = :name");
+        query.setParameter("name", ing.getName());
+        
+        if(!query.getResultList().isEmpty()){
+            log.log(Level.SEVERE, "ingredient "+ing.getName()+" already exists");
+            return new Ingredient("already exists",404f);
         }
         
         try {

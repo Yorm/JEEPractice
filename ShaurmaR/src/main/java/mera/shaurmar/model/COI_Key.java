@@ -5,6 +5,8 @@ import java.io.Serializable;
 
 
 public class COI_Key implements Serializable{
+    private static final long serialVersionUID = 7L;
+    
     private long ingredientId;
     private long compoundordId;
 
