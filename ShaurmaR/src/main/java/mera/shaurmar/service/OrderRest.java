@@ -11,10 +11,9 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import mera.shaurmar.dto.CompoundOrdDTO;
-import mera.shaurmar.model.CompoundOrd;
-import mera.shaurmar.model.SimpleOrd;
-import mera.shaurmar.dto.SimpleOrdDTO;
+import mera.shaurmar.model.CustomOrder;
+import mera.shaurmar.dto.CustomOrderDTO;
+import mera.shaurmar.dto.CustomOrder_DTOStatus;
 
 
 @Stateless
@@ -26,81 +25,71 @@ public class OrderRest {
     OrderService ordServ;
     
     @GET
-    @Path("/getSim")
-    public String getSimpleOrd(@QueryParam("id") long id){   
-        return "Simple order ["+id+"]:" + ordServ.getSimpleOrd(id);
-    }//http://localhost:8080/ShaurmaR/order/getSim?id=1
-    
-    @GET
-    @Path("/getCom")
-    public String getCompoundOrd(@QueryParam("id") long id){   
-        return "Compound order ["+id+"]:" + ordServ.getCompuondOrd(id);
-    }//http://localhost:8080/ShaurmaR/order/getCom?id=1
+    @Path("/getOrd")
+    public String getOrder(@QueryParam("id") long id){   
+        return "Order ["+id+"]:" + ordServ.getOrder(id);
+    }//http://localhost:8080/ShaurmaR/order/getOrd?id=1 
     
     @POST 
-    @Path("/addSim") 
-    public String addSimpleOrd(SimpleOrdDTO ordDto){    
-        return ordServ.saveSimpleOrd(ordDto)+" saved";
-    }/* http://localhost:8080/ShaurmaR/order/addSim
+    @Path("/addOrd") 
+    public String addOrder(CustomOrderDTO ordDto){    
+        return ordServ.saveOrder(ordDto)+" saved";
+    }/* http://localhost:8080/ShaurmaR/order/addOrd
+    
     {   
         "buyer":"user",
-        "note":"поострее",
-        "menuSh":[{"menuId":1,"count":"1"},{"menuId":2,"count":"1"}]
+        "note":"hot",
+        "menuSh":[
+                {
+                    "menu":{"id":1},
+                    "count":3,
+                    "shaurmaSize":"MINI",
+                    "additivs":[{
+                                    "count":1,
+                                    "ing":{"id":5}
+                                },
+                                {
+                                    "count":5,
+                                    "ing":{"id":2}
+                                }]
+                },
+                {
+                    "menu":{"id":2},
+                    "count":1,
+                    "shaurmaSize":"VIP",
+                    "additivs":[{
+                        "count":35,
+                        "ing":{"id":1}
+                    }]
+                }]
     }
     */
-    
-    //https://dzone.com/articles/what-is-serialversionuid
-    
-    @POST 
-    @Path("/addCom") 
-    public String addCompoundOrd(CompoundOrdDTO ordDto){    
-        return ordServ.saveCompoundOrd(ordDto)+" saved"; 
-    }/* http://localhost:8080/ShaurmaR/order/addCom
-    {
-        "id":100,
-        "name":"TEST_ING",
-        "price":767,
-        "menu":[]
-        "shaurma":[]
-    }
-    */
-    
+ 
     @PUT 
-    @Path("/putSim") 
-    public String upSimpleOrd(SimpleOrd ord){
-        return ordServ.upSimpleOrd(ord)+" update";
-    }/* http://localhost:8080/ShaurmaR/order/putSim
+    @Path("/putOrd") 
+    public String upOrder(CustomOrderDTO ord){
+        return ordServ.upOrder(ord)+" update";
+    }/* http://localhost:8080/ShaurmaR/order/putOrd
     {
-        "id":100,
-        "name":"TEST_ING_UPDATE",
-        "price":767,
-        "menu":[]
-        "shaurma":[]
+
     }
-    */
+    */ 
     @PUT 
-    @Path("/putCom") 
-    public String upCompoundOrd(CompoundOrd ord){
-        return ordServ.upCompoundOrd(ord)+" update";
-    }/*http://localhost:8080/ShaurmaR/order/putCom
+    @Path("/putStatusOrd") 
+    public String upOrderStatus(CustomOrder_DTOStatus ord){
+        return ordServ.upOrderStatus(ord)+" update";
+    }// http://localhost:8080/ShaurmaR/order/putStatusOrd
+    /*
     {
-        "id":100,
-        "name":"TEST_ING_UPDATE",
-        "price":767,
-        "menu":[]
-        "shaurma":[]
+        "id":3,
+        "status":"READY"
     }
     */
 
     @DELETE
-    @Path("/delSim")
-    public String delSimpleOrd(@QueryParam("id") long id){  
-        return ordServ.delSimpleOrd(id)+" ";
-    }//http://localhost:8080/ShaurmaR/order/delSim
+    @Path("/delOrd")
+    public String delOrder(@QueryParam("id") long id){  
+        return ordServ.delOrder(id)+" ";
+    }//http://localhost:8080/ShaurmaR/order/delOrd
     
-    @DELETE
-    @Path("/delCom")
-    public String delCompoundOrd(@QueryParam("id") long id){  
-        return ordServ.delCompoundOrd(id)+" ";
-    }//http://localhost:8080/ShaurmaR/order/delCom
 }

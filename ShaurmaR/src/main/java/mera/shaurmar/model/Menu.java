@@ -13,19 +13,15 @@ public class Menu implements Serializable {
     
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="menu_seq")
-    @Column(name = "menuid")
     private Long id;
     
     private String name;
     
     private Float price;
     
-    @ManyToMany(cascade = CascadeType.MERGE,fetch = FetchType.EAGER)
-    private List<Ingredient> ingredients = new ArrayList<>();
     
-    @OneToMany(mappedBy="menu")
-    private List<SimpleOrd_Menu> orders = new ArrayList<>();;
-
+    @OneToMany(mappedBy="menuItem")
+    private List<CustomOrder_Menu> orders = new ArrayList<>();;
 
     public Menu(){}
 
@@ -33,27 +29,72 @@ public class Menu implements Serializable {
         this.name = name;
         this.price = price;
     }
-    
-    public Menu(String name,Float price, List<Ingredient> ingredients, List<SimpleOrd_Menu> orders) {
-        this.name = name;
-        this.price = price;
-        this.ingredients = ingredients;
-        this.orders = orders;
-    }
-    public Menu(Long id, String name,Float price, List<Ingredient> ingredients, List<SimpleOrd_Menu> orders) {
+    public Menu(long id, String name, Float price) {
         this.id = id;
         this.name = name;
         this.price = price;
-        this.ingredients = ingredients;
+    }
+    
+    public Menu(String name,Float price, List<Ingredient> ingredients, List<CustomOrder_Menu> orders) {
+        this.name = name;
+        this.price = price;
+        this.orders = orders;
+    }
+    public Menu(Long id, String name,Float price, List<Ingredient> ingredients, List<CustomOrder_Menu> orders) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
         this.orders = orders;
     }
 
     public Menu(Menu s) {
         this.id = s.getId();
         this.name = s.getName();
-        this.ingredients = s.getIngredients();
         this.price = s.getPrice();
         this.orders = s.getOrders();
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 47 * hash + Objects.hashCode(this.id);
+        hash = 47 * hash + Objects.hashCode(this.name);
+        hash = 47 * hash + Objects.hashCode(this.price);
+        hash = 47 * hash + Objects.hashCode(this.orders);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Menu other = (Menu) obj;
+        if (!Objects.equals(this.name, other.name)) {
+            return false;
+        }
+        if (!Objects.equals(this.id, other.id)) {
+            return false;
+        }
+        if (!Objects.equals(this.price, other.price)) {
+            return false;
+        }
+
+        if (!Objects.equals(this.orders, other.orders)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Menu{" + "id=" + id + ", name=" + name + ", price=" + price +  ", orders=" + orders + '}';
     }
 
     public Float getPrice() {
@@ -62,14 +103,6 @@ public class Menu implements Serializable {
 
     public void setPrice(Float price) {
         this.price = price;
-    }
-    
-    public void addIngOfSet(Ingredient i){
-        ingredients.add(i);
-    }
-    
-    public Ingredient getIngOfSet(int id){
-        return new ArrayList<>(ingredients).get(id);
     }
     
     public Long getId() {
@@ -88,64 +121,12 @@ public class Menu implements Serializable {
         this.name = name;
     }
 
-    public List<Ingredient> getIngredients() {
-        return ingredients;
-    }
-
-    public void setIngredients(List<Ingredient> ingredients) {
-        this.ingredients = ingredients;
-    }   
-
-    public List<SimpleOrd_Menu> getOrders() {
+    public List<CustomOrder_Menu> getOrders() {
         return orders;
     }
 
-    public void setOrders(List<SimpleOrd_Menu> orders) {
+    public void setOrders(List<CustomOrder_Menu> orders) {
         this.orders = orders;
     }
-
-    @Override
-    public int hashCode() {
-        int hash = 5;
-        hash = 29 * hash + (int) (this.id ^ (this.id >>> 32));
-        hash = 29 * hash + Objects.hashCode(this.name);
-        hash = 29 * hash + Objects.hashCode(this.price);
-        hash = 29 * hash + Objects.hashCode(this.ingredients);
-        hash = 29 * hash + Objects.hashCode(this.orders);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Menu other = (Menu) obj;
-        if (!Objects.equals(this.id, other.id)) {
-            return false;
-        }
-        if (!Objects.equals(this.name, other.name)) {
-            return false;
-        }
-        if (!Objects.equals(this.ingredients, other.ingredients)) {
-            return false;
-        }
-        if (!Objects.equals(this.orders, other.orders)) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "Menu{" + "id=" + id + ", name=" + name + ", price=" + price + ", ingrediens=" + ingredients + ", orders=" + orders + '}';
-    }
-
 
 }

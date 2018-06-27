@@ -1,8 +1,8 @@
 
 package mera.shaurmar.service;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
 import mera.shaurmar.dao.DBService;
@@ -11,32 +11,36 @@ import mera.shaurmar.dto.MenuDTO;
 
 @Named
 @ApplicationScoped
-public class MenuService  extends Service{
+public class MenuService extends Service{
     
     public MenuService() {
-        log = Logger.getLogger(MenuService.class.getName());
+        log = LoggerFactory.getLogger(MenuService.class);
         db = new DBService();
     }
     public Menu saveMenu(MenuDTO shDto){
         
         Menu sh = new Menu();
-        sh.setIngredients(shDto.getIngredient());
         sh.setName(shDto.name);
-        sh.setPrice(shDto.getPrice());
+        sh.setPrice(shDto.price);
         
-        log.log(Level.INFO,"Save menu pos");
+        log.info("Save menu pos");
         return db.saveMenu(sh);
     }
-    public Menu updateMenu(Menu sh){
-        log.log(Level.INFO,"Update menu pos");
+    public Menu updateMenu(MenuDTO shDto){
+        Menu sh = new Menu();
+        sh.setId(shDto.id);
+        sh.setName(shDto.name);
+        sh.setPrice(shDto.price);
+        
+        log.info("Update menu pos");
         return (Menu)db.updateObj(sh, sh.getId());
     }
     public Menu getMenu(Long id){
-        log.log(Level.INFO,"Get menu pos");
+        log.info("Get menu pos");
         return db.findObj(new Menu(), id);
     }
     public boolean delMenu(Long id){
-        log.log(Level.INFO,"Delete menu pos");
+        log.info("Delete menu pos");
         return db.deleteObj(new Menu(), id);
     }
 }

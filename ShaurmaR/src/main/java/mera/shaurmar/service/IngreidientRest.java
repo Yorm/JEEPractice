@@ -18,13 +18,13 @@ public class IngreidientRest {
     
     @GET
     @Path("/get")
-    public String getIngredient(@QueryParam("id") Long id){   
+    public String getIngredient(@QueryParam("id") long id){   
         return "Ingredient["+id+"]:" + ingServ.getIng(id);
     }//http://localhost:8080/ShaurmaR/ingreidient/get?id=1
     
     @DELETE
     @Path("/del")
-    public String delIngredient(@QueryParam("id") Long id){  
+    public String delIngredient(@QueryParam("id") long id){  
         return ingServ.delIng(id)+" ";
     }//http://localhost:8080/ShaurmaR/ingreidient/del?id=1
     

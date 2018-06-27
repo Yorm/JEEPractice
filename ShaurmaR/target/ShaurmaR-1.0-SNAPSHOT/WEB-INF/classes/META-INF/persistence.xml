@@ -3,11 +3,9 @@
   <persistence-unit name="test" transaction-type="RESOURCE_LOCAL">
     <class>mera.shaurmar.model.Ingredient</class>
     <class>mera.shaurmar.model.Menu</class>
-    <class>mera.shaurmar.model.SimpleOrd</class>
-    <class>mera.shaurmar.model.CompoundOrd</class>
-    <class>mera.shaurmar.model.SimpleOrd_Menu</class>
-    <class>mera.shaurmar.model.CompoundOrd_Ingredient</class>
-    <class>mera.shaurmar.model.MainOrder</class>
+    <class>mera.shaurmar.model.CustomOrder</class>
+    <class>mera.shaurmar.model.CustomOrder_Menu</class>
+    <class>mera.shaurmar.model.CustomOrderMenu_Ingredient</class>
     <properties>
       <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
       <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/postgres"/>

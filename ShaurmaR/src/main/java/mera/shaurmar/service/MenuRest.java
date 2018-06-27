@@ -45,8 +45,8 @@ public class MenuRest {
     
     @PUT 
     @Path("/putMenu") 
-    public String upMenu(Menu sh){
-        return menuServ.updateMenu(sh)+" update";
+    public String upMenu(MenuDTO shDto){
+        return menuServ.updateMenu(shDto)+" update";
     }/*
     http://localhost:8080/ShaurmaR/menu/putIng
     {

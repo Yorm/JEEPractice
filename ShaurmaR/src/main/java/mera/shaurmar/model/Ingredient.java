@@ -2,10 +2,8 @@ package mera.shaurmar.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import javax.persistence.*;
 
 @Entity
@@ -15,19 +13,16 @@ public class Ingredient implements Serializable {
     
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="ing_seq")
-    @Column(name = "ingid")
-    private Long id;
+    private long id;
     private String name;
     private Float price;
     
-    @ManyToMany(mappedBy="additivs",cascade = CascadeType.MERGE)
-    private List<SimpleOrd_Menu> simpleOrd  = new ArrayList<>();
     
-    @ManyToMany(mappedBy="ingredients",cascade = CascadeType.MERGE)
+    /*@ManyToMany(mappedBy="ingredients",cascade = CascadeType.MERGE)
     private List<Menu> menu  = new ArrayList<>();
-    
-    @OneToMany(mappedBy="ing")
-    private List<CompoundOrd_Ingredient> shaurma = new ArrayList<>();;
+    */
+    @OneToMany(mappedBy="ing"/*, cascade = CascadeType.PERSIST*/)
+    private List<CustomOrderMenu_Ingredient> orders = new ArrayList<>();;
     
     public Ingredient(){}
 
@@ -36,21 +31,29 @@ public class Ingredient implements Serializable {
         this.price = price;
     }
 
+    public Ingredient(long id, String name, Float price) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+    }
+    
     public Ingredient(Ingredient i) {
         this.id = i.getId();
         this.name = i.getName();
         this.price = i.getPrice();
-        this.menu = i.getMenu();
+        //this.menu = i.getMenu();
     }
 
-    public List<Menu> getMenu() {
+    public void addOrder(CustomOrderMenu_Ingredient ord){
+        orders.add(ord);  
+    }
+    /*public List<Menu> getMenu() {
         return menu;
     }
 
     public void setMenu(List<Menu> menu) {
         this.menu = menu;
-    }
-    
+    }*/
 
     public Long getId() {
         return id;
@@ -76,33 +79,26 @@ public class Ingredient implements Serializable {
         this.price = price;
     }
 
-    public List<CompoundOrd_Ingredient> getShaurma() {
-        return shaurma;
+
+    public List<CustomOrderMenu_Ingredient> getOrders() {
+        return orders;
     }
 
-    public void setShaurma(List<CompoundOrd_Ingredient> shaurma) {
-        this.shaurma = shaurma;
-    }
-
-    public List<SimpleOrd_Menu> getSimpleOrd() {
-        return simpleOrd;
-    }
-
-    public void setSimpleOrd(List<SimpleOrd_Menu> simpleOrd) {
-        this.simpleOrd = simpleOrd;
+    public void setOrders(List<CustomOrderMenu_Ingredient> orders) {
+        this.orders = orders;
     }
 
     @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 59 * hash + Objects.hashCode(this.id);
-        hash = 59 * hash + Objects.hashCode(this.name);
-        hash = 59 * hash + Objects.hashCode(this.price);
-        hash = 59 * hash + Objects.hashCode(this.simpleOrd);
-        hash = 59 * hash + Objects.hashCode(this.menu);
-        hash = 59 * hash + Objects.hashCode(this.shaurma);
+        int hash = 5;
+        hash = 71 * hash + (int) (this.id ^ (this.id >>> 32));
+        hash = 71 * hash + Objects.hashCode(this.name);
+        hash = 71 * hash + Objects.hashCode(this.price);
+        hash = 71 * hash + Objects.hashCode(this.orders);
         return hash;
     }
+
+    
 
     @Override
     public boolean equals(Object obj) {
@@ -125,13 +121,10 @@ public class Ingredient implements Serializable {
         if (!Objects.equals(this.price, other.price)) {
             return false;
         }
-        if (!Objects.equals(this.simpleOrd, other.simpleOrd)) {
+        /*if (!Objects.equals(this.menu, other.menu)) {
             return false;
-        }
-        if (!Objects.equals(this.menu, other.menu)) {
-            return false;
-        }
-        if (!Objects.equals(this.shaurma, other.shaurma)) {
+        }*/
+        if (!Objects.equals(this.orders, other.orders)) {
             return false;
         }
         return true;
@@ -139,11 +132,7 @@ public class Ingredient implements Serializable {
 
     @Override
     public String toString() {
-        return "Ingredient{" + "id=" + id + ", name=" + name + ", price=" + price + ", simpleOrd=" + simpleOrd + ", menu=" + menu + ", shaurma=" + shaurma + '}';
+        return "Ingredient{" + "id=" + id + ", name=" + name + ", price=" + price /*+ ", menu=" + menu*/ + ", orders=" + orders + '}';
     }
-
-
-
-
 
 }

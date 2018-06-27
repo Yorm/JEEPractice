@@ -1,6 +1,7 @@
 package mera.shaurmar.model;
 
 public enum Status{
+    CANCELED("Canceled"),
     NEW("New order created"),
     INPROGRESS("Order in progress"), 
     READY("Order ready"), 
