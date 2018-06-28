@@ -2,7 +2,6 @@ package mera.shaurmar.dto;
 
 import java.util.ArrayList;
 import java.util.List;
-import mera.shaurmar.model.CustomOrder_Menu;
 import mera.shaurmar.model.Status;
 
 public class CustomOrderDTO {

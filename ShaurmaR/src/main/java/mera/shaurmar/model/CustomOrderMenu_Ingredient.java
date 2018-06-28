@@ -26,8 +26,6 @@ public class CustomOrderMenu_Ingredient implements Serializable{
     
     private int count;   
     
-    public CustomOrderMenu_Ingredient(){}
-    
     @ManyToOne
     @PrimaryKeyJoinColumn (name = "comtable_id" ,  referencedColumnName = "id" ) 
     private CustomOrder_Menu com;
@@ -35,6 +33,8 @@ public class CustomOrderMenu_Ingredient implements Serializable{
     @ManyToOne/*(cascade={CascadeType.PERSIST})*/
     @PrimaryKeyJoinColumn (name = "ingredientId" ,  referencedColumnName = "id" ) 
     private Ingredient ing;
+    
+    public CustomOrderMenu_Ingredient(){}
 
     public long getComtable_id() {
         return comtable_id;
@@ -76,4 +76,10 @@ public class CustomOrderMenu_Ingredient implements Serializable{
         this.ing = ing;
     }
 
+    @Override
+    public String toString() {
+        return "CustomOrderMenu_Ingredient{" + "comtable_id=" + comtable_id + ", ingredientId=" + ingredientId + ", count=" + count + ", com=" + com + ", ing=" + ing + '}';
+    }
+
+    
 }

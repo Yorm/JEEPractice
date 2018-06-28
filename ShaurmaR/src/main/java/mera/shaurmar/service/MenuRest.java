@@ -5,6 +5,8 @@ import javax.ejb.Stateless;
 import javax.ws.rs.*;
 import javax.ws.rs.Path;
 import javax.inject.Inject;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
 import mera.shaurmar.model.Menu;
 import mera.shaurmar.dto.MenuDTO;
 
@@ -18,20 +20,21 @@ public class MenuRest {
     
     @GET
     @Path("/get")
-    public String getMenu(@QueryParam("id") Long id){   
-        return "Menu["+id+"]:" + menuServ.getMenu(id);
+    public Response getMenu(@QueryParam("id") Long id){ 
+        MenuDTO menu = menuServ.getMenu(id);
+        return menu==null?Response.serverError().build():Response.ok(menu).build();
     }//http://localhost:8080/ShaurmaR/menu/get?id=1
     
     @DELETE
     @Path("/del")
-    public String delMenu(@QueryParam("id") Long id){  
-        return menuServ.delMenu(id)+" ";
+    public Response delMenu(@QueryParam("id") Long id){  
+        return menuServ.delMenu(id)?Response.ok().build():Response.serverError().build();
     }//http://localhost:8080/ShaurmaR/menu/del?id=1
     
     @POST 
     @Path("/addMenu") 
-    public String addMenu(MenuDTO shDto){    
-        return menuServ.saveMenu(shDto)+" saved";
+    public Response addMenu(MenuDTO shDto){  
+        return menuServ.saveMenu(shDto)==null?Response.serverError().build():Response.ok(shDto).build(); 
     }/* 
     http://localhost:8080/ShaurmaR/menu/addMenu
     {
@@ -45,10 +48,10 @@ public class MenuRest {
     
     @PUT 
     @Path("/putMenu") 
-    public String upMenu(MenuDTO shDto){
-        return menuServ.updateMenu(shDto)+" update";
+    public Response upMenu(MenuDTO shDto){ 
+        return menuServ.updateMenu(shDto)==null?Response.serverError().build():Response.ok(shDto).build();
     }/*
-    http://localhost:8080/ShaurmaR/menu/putIng
+    http://localhost:8080/ShaurmaR/menu/putMenu
     {
         "id":100,
         "name":"TEST_ING_UPDATE",

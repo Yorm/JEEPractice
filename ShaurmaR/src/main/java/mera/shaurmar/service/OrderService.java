@@ -7,6 +7,7 @@ import mera.shaurmar.dao.DBService;
 import mera.shaurmar.model.CustomOrder;
 import mera.shaurmar.dto.CustomOrderDTO;
 import mera.shaurmar.dto.CustomOrder_DTOStatus;
+import mera.shaurmar.dto.CustomOrder_UpdateDTO;
 import mera.shaurmar.model.Status;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
@@ -31,7 +32,7 @@ public class OrderService extends Service{
         return db.saveOrder(ordDto);
     }
 
-    public CustomOrder upOrder(CustomOrderDTO ordDto) {
+    public CustomOrder updateOrder(CustomOrder_UpdateDTO ordDto) {
         log.info("Update order "+ordDto);
         return db.updateOrder(ordDto);
     }
@@ -44,7 +45,7 @@ public class OrderService extends Service{
 
     public boolean delOrder(long id) {
         log.info("Delete order "+id);
-        return db.deleteObj(new CustomOrder(),id);
+        return db.deleteOrder(id);
     }
 
 }

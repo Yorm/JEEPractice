@@ -11,6 +11,7 @@ import mera.shaurmar.dto.CustomOrderDTO;
 import mera.shaurmar.dto.CustomOrderMenu_Ingredient_DTO;
 import mera.shaurmar.dto.CustomOrder_DTOStatus;
 import mera.shaurmar.dto.CustomOrder_Menu_DTO;
+import mera.shaurmar.dto.CustomOrder_UpdateDTO;
 import mera.shaurmar.model.*;
 
 
@@ -40,7 +41,11 @@ public class DBService {
     }
     
     public <T> T updateObj(T cls,long id) {
+        
         try {
+            if(em.find(cls.getClass(), id)==null){
+                throw new Exception();
+            }
             em.getTransaction().begin();
             em.merge(cls);
             em.getTransaction().commit();  
@@ -55,70 +60,31 @@ public class DBService {
     public CustomOrder_DTOStatus updateOrderStatus (CustomOrder_DTOStatus ordDto) {
         CustomOrder order = (CustomOrder)findObj(new CustomOrder(), ordDto.id);
         order.setStatus(ordDto.status);
-        updateObj(order,order.getId());
-        return ordDto; 
+        return updateObj(order,order.getId())==null?null:ordDto; 
     }
     
-    public CustomOrder updateOrder (CustomOrderDTO ordDto) {
+    public CustomOrder updateOrder (CustomOrder_UpdateDTO ordDto) {
         CustomOrder order = (CustomOrder)findObj(new CustomOrder(), ordDto.id);
         
         order.setBuyer(ordDto.buyer);
         order.setNote(ordDto.note);
         order.setCreationDate(ordDto.creationDate);
         order.setStatus(ordDto.status);
-        //order.setSum(ordDto.sum);
-        
-        
-        //if size == size 
-        List<CustomOrder_Menu> comList = new ArrayList<>();
-        
-        for(CustomOrder_Menu_DTO comDto : ordDto.menuSh){
-            for(CustomOrder_Menu com : order.getMenu()){
-                if(comDto.com_id==com.getId()){
-                    //com.setId(0);
-                    //com.setCusorder(order);
-                    com.setCount(comDto.count);
-                    com.setMenuItem(new Menu(comDto.menu.id,comDto.menu.name,comDto.menu.price));
-                    com.setShaurmaSize(comDto.shaurmaSize);
-                    
-                    //if size == size 
-                    
-                    List<CustomOrderMenu_Ingredient> comiList = new ArrayList<>();
-                    
-                    for(CustomOrderMenu_Ingredient_DTO comiDto : comDto.additivs){
-                        for(CustomOrderMenu_Ingredient comi : com.getAdditivs()){
-                            //comi.setCom(com);
-                            //comi.setComtable_id(0);
-                            comi.setCount(comiDto.count);
-                            comi.setIng(new Ingredient(comiDto.ing.id,comiDto.ing.name,comiDto.ing.price));
-                            comi.setIngredientId(comiDto.ing.id);
-                            comi.getIng().addOrder(comi);
-                            
-                            comiList.add(comi);
-                        }
-                    }
-                    com.setAdditivs(comiList);
-                    
-                    comList.add(com); 
-                }
-            }
-        }
-        order.setMenu(comList);
-        
-        //TODO
-        return order; 
+        order.setSum(ordDto.sum);
+        order.setMenu( ordDto.menuSh);      
+
+        return updateObj(order,order.getId())==null?null:order; 
     }
     
     public <T> T findObj(T cls,long id) {
         T obj;
         try {
             obj = (T) em.find(cls.getClass(), id);
+            return obj;
         } catch (Exception ex) {
-            obj=null;
             log.error("Exception: ", ex);
-        }
-        log.info("Find: " + obj);
-        return obj;
+            return null;  
+        }      
     }
     
     public <T> boolean deleteObj(T cls, Long id) {
@@ -135,6 +101,74 @@ public class DBService {
             em.getTransaction().rollback();
         }   
         return obj!=null;
+    }
+    
+    public boolean deleteOrder(long id){
+        //get ord
+        CustomOrder ord = em.find(CustomOrder.class, id); if(ord==null) return false;
+        
+        //get ord_menu
+        Query queryCom = em.createQuery("Select com FROM CustomOrder_Menu com"); 
+        if(queryCom.getResultList().isEmpty()){    
+            return false;
+        }
+        List<CustomOrder_Menu> ord_menu=new ArrayList<>();
+        for(int i=0;i<queryCom.getResultList().size();i++){
+            CustomOrder_Menu com = (CustomOrder_Menu) queryCom.getResultList().get(i);
+            if(com.getCusorder().getId()==id){
+                ord_menu.add(com); 
+            }
+        }
+        //get ordMenu_ing
+        Query queryComi = em.createQuery("Select comi FROM CustomOrderMenu_Ingredient comi"); 
+        if(queryComi.getResultList().isEmpty()){    
+            return false;
+        }
+        List<CustomOrderMenu_Ingredient> ordMenu_ing=new ArrayList<>();
+        for(int j=0;j<ord_menu.size();j++){
+            for(int i=0;i<queryComi.getResultList().size();i++){
+                CustomOrderMenu_Ingredient comi = (CustomOrderMenu_Ingredient) queryComi.getResultList().get(i);
+                if(comi.getComtable_id()==ord_menu.get(j).getId()){
+                    ordMenu_ing.add(comi); 
+                }
+            }
+        }
+        //del ordMenu_ing
+        //del ord_menu
+        //del ord
+        for(int i=0; i<ordMenu_ing.size();i++){
+            try {
+                em.getTransaction().begin();
+                em.remove(ordMenu_ing.get(i));
+                log.info("delete "+ordMenu_ing.get(i));
+                em.getTransaction().commit(); 
+            } catch (Exception ex) {
+                log.error("Exception: ", ex);
+                em.getTransaction().rollback();
+            }   
+        }
+        for(int i=0; i<ord_menu.size();i++){
+            try {
+                em.getTransaction().begin();
+                em.remove(ord_menu.get(i));
+                log.info("delete "+ord_menu.get(i));
+                em.getTransaction().commit(); 
+            } catch (Exception ex) {
+                log.error("Exception: ", ex);
+                em.getTransaction().rollback();
+            }   
+        }
+        try {
+            em.getTransaction().begin();
+            em.remove(ord);
+            log.info("delete "+ord);
+            em.getTransaction().commit(); 
+        } catch (Exception ex) {
+            log.error("Exception: ", ex);
+            em.getTransaction().rollback();
+        }   
+        
+        return true;
     }
     
     public CustomOrder orderDTOtoOrder(CustomOrderDTO ordDto){
@@ -155,7 +189,7 @@ public class DBService {
             
             Menu m = (Menu)findObj(new Menu(),comDto.menu.id);
             if(m==null){
-                m = new Menu("not found",404f);
+                return null;
             }
             
             comItem.setMenuItem(m);
@@ -176,7 +210,7 @@ public class DBService {
                 Ingredient ing = (Ingredient)findObj(new Ingredient(),comiDto.ing.id);
                 
                 if(ing==null){
-                    ing = new Ingredient("not found",404f);
+                    return null;
                 }
                 comiItem.setIngredientId(ing.getId());
                 ing.addOrder(comiItem);
@@ -199,17 +233,17 @@ public class DBService {
    
     public CustomOrderDTO saveOrder(CustomOrderDTO ordDto){
         CustomOrder order = orderDTOtoOrder(ordDto);
-        
-        try {
+        if(order==null) return null;
+        try {  
             em.getTransaction().begin();
             em.merge(order);
             em.getTransaction().commit();
+            return ordDto;
         } catch (Exception ex) {
             log.error("Exception: ", ex);
             em.getTransaction().rollback();
-        }
-      
-        return ordDto;
+            return null;
+        }      
     }
     
     public Menu saveMenu(Menu m)  { 
@@ -217,8 +251,8 @@ public class DBService {
         query.setParameter("name", m.getName());
         
         if(!query.getResultList().isEmpty()){
-            log.error("menu "+m.getName()+" already exists");
-            return new Menu("already exists",404f);
+            log.error("Menu "+m.getName()+" already exists");
+            return null;
         }
         
         try {
@@ -237,7 +271,7 @@ public class DBService {
         
         if(!query.getResultList().isEmpty()){
             log.error("ingredient "+ing.getName()+" already exists");
-            return new Ingredient("already exists",404f);
+            return null;
         }
         
         try {

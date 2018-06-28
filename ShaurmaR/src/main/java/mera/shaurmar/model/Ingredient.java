@@ -17,10 +17,6 @@ public class Ingredient implements Serializable {
     private String name;
     private Float price;
     
-    
-    /*@ManyToMany(mappedBy="ingredients",cascade = CascadeType.MERGE)
-    private List<Menu> menu  = new ArrayList<>();
-    */
     @OneToMany(mappedBy="ing"/*, cascade = CascadeType.PERSIST*/)
     private List<CustomOrderMenu_Ingredient> orders = new ArrayList<>();;
     
@@ -41,19 +37,11 @@ public class Ingredient implements Serializable {
         this.id = i.getId();
         this.name = i.getName();
         this.price = i.getPrice();
-        //this.menu = i.getMenu();
     }
 
     public void addOrder(CustomOrderMenu_Ingredient ord){
         orders.add(ord);  
     }
-    /*public List<Menu> getMenu() {
-        return menu;
-    }
-
-    public void setMenu(List<Menu> menu) {
-        this.menu = menu;
-    }*/
 
     public Long getId() {
         return id;
@@ -121,9 +109,6 @@ public class Ingredient implements Serializable {
         if (!Objects.equals(this.price, other.price)) {
             return false;
         }
-        /*if (!Objects.equals(this.menu, other.menu)) {
-            return false;
-        }*/
         if (!Objects.equals(this.orders, other.orders)) {
             return false;
         }
@@ -132,7 +117,8 @@ public class Ingredient implements Serializable {
 
     @Override
     public String toString() {
-        return "Ingredient{" + "id=" + id + ", name=" + name + ", price=" + price /*+ ", menu=" + menu*/ + ", orders=" + orders + '}';
+        return "Ingredient{" + "id=" + id + ", name=" + name + ", price=" + price + ", orders=" + orders + '}';
     }
+    
 
 }

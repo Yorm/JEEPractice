@@ -5,7 +5,9 @@ import javax.ws.rs.*;
 
 import javax.ws.rs.Path;
 import javax.inject.Inject;
+import javax.ws.rs.core.Response;
 import mera.shaurmar.dto.IngredientDTO;
+import mera.shaurmar.dto.MenuDTO;
 import mera.shaurmar.model.Ingredient;
 
 @Stateless
@@ -16,22 +18,26 @@ public class IngreidientRest {
     @Inject
     IngredientService ingServ;
     
+    
     @GET
     @Path("/get")
-    public String getIngredient(@QueryParam("id") long id){   
-        return "Ingredient["+id+"]:" + ingServ.getIng(id);
-    }//http://localhost:8080/ShaurmaR/ingreidient/get?id=1
+    public Response getIngredient(@QueryParam("id") long id){   
+        IngredientDTO ing = ingServ.getIng(id);
+        return ing==null?Response.serverError().build():Response.ok(ing).build();
+    }//http://localhost:8080/ShaurmaR/ingreidient/get?id=1 
     
     @DELETE
     @Path("/del")
-    public String delIngredient(@QueryParam("id") long id){  
-        return ingServ.delIng(id)+" ";
+    public Response delIngredient(@QueryParam("id") long id){  
+        return ingServ.delIng(id)?Response.ok().build():Response.serverError().build();
     }//http://localhost:8080/ShaurmaR/ingreidient/del?id=1
     
+    
+
     @POST 
     @Path("/addIng") 
-    public String addIngredient(IngredientDTO ingDto){    
-        return ingServ.saveIng(ingDto)+" saved";
+    public Response addIngredient(IngredientDTO ingDto){    
+        return ingServ.saveIng(ingDto)==null?Response.serverError().build():Response.ok(ingDto).build();
     }/* http://localhost:8080/ShaurmaR/ingreidient/addIng
         {
             "id":100,
@@ -44,8 +50,8 @@ public class IngreidientRest {
     
     @PUT 
     @Path("/putIng") 
-    public String upIngredient(IngredientDTO ingDto){
-        return ingServ.updateIng(ingDto)+" update";
+    public Response upIngredient(IngredientDTO ingDto){
+        return ingServ.updateIng(ingDto)==null?Response.serverError().build():Response.ok(ingDto).build();
     }/*http://localhost:8080/ShaurmaR/ingreidient/putIng
         {
             "id":100,
@@ -59,36 +65,3 @@ public class IngreidientRest {
     
 
 }
-/*
-
-//Методы POST и PUT должны возвращать обратно объект, который они изменили или создали, — это позволит сократить время обращения к сервису вдвое.
-//TODO Объединить ресты
-POST – создать новую сущность
-POST /Stations – JSON-описание сущности целиком. Действие добавляет новую сущность в коллекцию.
-Возвращает созданную сущность (во-первых, чтобы не было двойных походов к серверу, во-вторых, чтобы, если это нужно, вернуть со стороны сервера параметры, которые посчитались в этом объекте и нужны вам на клиенте).
-
-
-PUT — изменить сущность
-PUT /Stations/12 — Изменить сущность с ID = 12. JSON, который придет в параметре, будет записан поверх.
-Возвращает измененную сущность. Путь, который был применен много раз, должен приводить систему к одному и тому же состоянию.
-
-DELETE
-DELETE /Stations/12 — удалить сущность с ID = 12.
-
-
-
-{
-  meta: {
-  },
-  data: [{
-    id: 24,
-    title: 'Behavior-Driven Development',
-    author: 'Viktor Farcic'
-  }, {
-    id: 25,
-    title: 'Continuous Integration',
-    author: 'Viktor Farcic'
-  }]
-}
-
-*/

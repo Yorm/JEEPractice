@@ -30,9 +30,11 @@ public class IngredientService  extends Service{
         log.info("Update ingredient");
         return (Ingredient)db.updateObj(ing, ing.getId());
     }
-    public Ingredient getIng(Long id){
-        log.info("Get ingredient");
-        return db.findObj(new Ingredient(), id);
+    
+    public IngredientDTO getIng(Long id){
+        Ingredient ing = db.findObj(new Ingredient(), id);
+         log.info("Get ingredient");
+        return ing==null?null:new IngredientDTO(ing);
     }
     public boolean delIng(Long id){
         log.info("Delete ingredient");

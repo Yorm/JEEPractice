@@ -23,7 +23,7 @@ public class MenuService extends Service{
         sh.setName(shDto.name);
         sh.setPrice(shDto.price);
         
-        log.info("Save menu pos");
+        log.info("Save menu pos ");
         return db.saveMenu(sh);
     }
     public Menu updateMenu(MenuDTO shDto){
@@ -35,9 +35,10 @@ public class MenuService extends Service{
         log.info("Update menu pos");
         return (Menu)db.updateObj(sh, sh.getId());
     }
-    public Menu getMenu(Long id){
-        log.info("Get menu pos");
-        return db.findObj(new Menu(), id);
+    public MenuDTO getMenu(Long id){
+        log.info("Get menu pos"); 
+        Menu m = db.findObj(new Menu(), id);
+        return m==null?null:new MenuDTO(m);
     }
     public boolean delMenu(Long id){
         log.info("Delete menu pos");
