@@ -3,15 +3,17 @@ package mera.shaurmar.dto;
 
 import java.util.ArrayList;
 import java.util.List;
-import mera.shaurmar.model.Ingredient;
-import mera.shaurmar.model.CustomOrder_Menu;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import mera.shaurmar.model.Menu;
 
 public class MenuDTO {
+    //@Null
     public Long id;
+    @NotNull
     public String name;
-    public Float price;
-    private List<CustomOrder_Menu_DTO> orders = new ArrayList<>();
+    @NotNull
+    public double price;
 
     public MenuDTO(Menu menu) {
         this.id = menu.getId();
@@ -24,7 +26,7 @@ public class MenuDTO {
 
     @Override
     public String toString() {
-        return "MenuDTO{" + "id=" + id + ", name=" + name + ", price=" + price + ", orders=" + orders + '}';
+        return "MenuDTO{" + "id=" + id + ", name=" + name + ", price=" + price +  '}';
     }
  
 

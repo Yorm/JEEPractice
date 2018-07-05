@@ -1,17 +1,27 @@
 package mera.shaurmar.dto;
 
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import mera.shaurmar.model.Status;
 
 public class CustomOrderDTO {
-    public long id;
+    
+    public Long id;
+    
+    //@NotNull
     public String buyer;
+    //@NotNull
     public String note;
-    public Float sum;
-    public java.util.Date creationDate; 
+    
+    public double sum;  
+    public ZonedDateTime creationDate; 
     public Status status; 
-    public List<CustomOrder_Menu_DTO> menuSh = new ArrayList<>();
+    
+    //@NotNull
+    public List<CustomOrderMenuDTO> menuSh = new ArrayList<>();
 
     @Override
     public String toString() {

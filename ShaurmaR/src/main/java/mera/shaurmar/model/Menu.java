@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @SequenceGenerator(name="menu_seq",sequenceName="menu_seq", allocationSize=1,initialValue = 1)
@@ -14,33 +15,35 @@ public class Menu implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="menu_seq")
     private Long id;
-    
+    //@Column(nullable = false)
+    //@NotNull
     private String name;
-    
-    private Float price;
+    //@Column(nullable = false)
+    //@NotNull
+    private double price;
     
     
     @OneToMany(mappedBy="menuItem")
-    private List<CustomOrder_Menu> orders = new ArrayList<>();;
+    private List<CustomOrderMenu> orders = new ArrayList<>();;
 
     public Menu(){}
 
-    public Menu(String name, Float price) {
+    public Menu(String name, double price) {
         this.name = name;
         this.price = price;
     }
-    public Menu(long id, String name, Float price) {
+    public Menu(long id, String name, double price) {
         this.id = id;
         this.name = name;
         this.price = price;
     }
     
-    public Menu(String name,Float price, List<Ingredient> ingredients, List<CustomOrder_Menu> orders) {
+    public Menu(String name,double price, List<Ingredient> ingredients, List<CustomOrderMenu> orders) {
         this.name = name;
         this.price = price;
         this.orders = orders;
     }
-    public Menu(Long id, String name,Float price, List<Ingredient> ingredients, List<CustomOrder_Menu> orders) {
+    public Menu(Long id, String name,double price, List<Ingredient> ingredients, List<CustomOrderMenu> orders) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -94,14 +97,14 @@ public class Menu implements Serializable {
 
     @Override
     public String toString() {
-        return "Menu{" + "id=" + id + ", name=" + name + ", price=" + price +  ", orders=" + orders + '}';
+        return "Menu{" + "id=" + id + ", name=" + name + ", price=" + price + '}';
     }
 
-    public Float getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(Float price) {
+    public void setPrice(double price) {
         this.price = price;
     }
     
@@ -121,11 +124,11 @@ public class Menu implements Serializable {
         this.name = name;
     }
 
-    public List<CustomOrder_Menu> getOrders() {
+    public List<CustomOrderMenu> getOrders() {
         return orders;
     }
 
-    public void setOrders(List<CustomOrder_Menu> orders) {
+    public void setOrders(List<CustomOrderMenu> orders) {
         this.orders = orders;
     }
 

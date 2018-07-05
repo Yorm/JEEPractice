@@ -4,8 +4,9 @@
     <class>mera.shaurmar.model.Ingredient</class>
     <class>mera.shaurmar.model.Menu</class>
     <class>mera.shaurmar.model.CustomOrder</class>
-    <class>mera.shaurmar.model.CustomOrder_Menu</class>
-    <class>mera.shaurmar.model.CustomOrderMenu_Ingredient</class>
+    <class>mera.shaurmar.model.CustomOrderMenu</class>
+    <class>mera.shaurmar.model.CustomOrderMenuIngredient</class>
+    <class>mera.shaurmar.model.ZonedDateTimeConverter</class>
     <properties>
       <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
       <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/postgres"/>

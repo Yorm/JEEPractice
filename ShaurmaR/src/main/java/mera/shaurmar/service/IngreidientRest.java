@@ -1,13 +1,16 @@
 package mera.shaurmar.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.ws.rs.*;
 
 import javax.ws.rs.Path;
 import javax.inject.Inject;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
+import mera.shaurmar.dto.ArrayListDTO;
 import mera.shaurmar.dto.IngredientDTO;
-import mera.shaurmar.dto.MenuDTO;
 import mera.shaurmar.model.Ingredient;
 
 @Stateless
@@ -18,6 +21,15 @@ public class IngreidientRest {
     @Inject
     IngredientService ingServ;
     
+    @GET
+    @Path("/getAll")
+    public Response getIngredients(){   
+        ArrayList<Ingredient> ing = ingServ.getAll();
+        if(ing == null) return Response.serverError().build();  
+        
+        GenericEntity<List<Ingredient>> list = new GenericEntity<List<Ingredient>>(ing) {};
+        return Response.ok(list.toString()).build();
+    }
     
     @GET
     @Path("/get")

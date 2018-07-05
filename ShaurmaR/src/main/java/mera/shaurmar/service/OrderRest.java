@@ -1,6 +1,8 @@
 
 package mera.shaurmar.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -11,10 +13,13 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
 import mera.shaurmar.dto.CustomOrderDTO;
-import mera.shaurmar.dto.CustomOrder_DTOStatus;
-import mera.shaurmar.dto.CustomOrder_UpdateDTO;
+import mera.shaurmar.dto.CustomOrderDTOStatus;
+import mera.shaurmar.dto.CustomOrderUpdateDTO;
+import mera.shaurmar.model.CustomOrder;
+import mera.shaurmar.model.Menu;
 
 
 @Stateless
@@ -26,9 +31,20 @@ public class OrderRest {
     OrderService ordServ;
     
     @GET
+    @Path("/getAll")
+    public Response getOrders(){ 
+        ArrayList<CustomOrder> result = ordServ.getAll();
+        if(result == null) return Response.serverError().build();  
+        
+        GenericEntity<List<CustomOrder>> list = new GenericEntity<List<CustomOrder>>(result) {};
+        return Response.ok(list.toString()).build();
+    }//http://localhost:8080/ShaurmaR/order/getAll
+    
+    @GET
     @Path("/getOrd")
-    public String getOrder(@QueryParam("id") long id){   
-        return "Order ["+id+"]:" + ordServ.getOrder(id);
+    public Response getOrder(@QueryParam("id") long id){   
+        CustomOrderUpdateDTO ord = ordServ.getOrder(id);
+        return ord==null?Response.serverError().build():Response.ok(ord).build();
     }//http://localhost:8080/ShaurmaR/order/getOrd?id=1 
     
     @POST 
@@ -69,56 +85,52 @@ public class OrderRest {
     //TODO
     @PUT 
     @Path("/putOrd") 
-    public String upOrder(CustomOrder_UpdateDTO ord){
-        return ordServ.updateOrder(ord)+" update";
+    public String upOrder(CustomOrderDTO ord){
+        CustomOrder order = ordServ.updateOrder(ord);
+        return order+" ";
     }/* http://localhost:8080/ShaurmaR/order/putOrd
-    {
-    
-        {   
-        "id":3,
-        "buyer":"user_TEST",
-        "note":"hot",
-        "sum":30000,
-        "creationDate":"Jun 27, 2018 3:46:17 PM",
-        "status":"CANCELED",
-        "menuSh":[
+     {   
+      "id":56,
+      "note":"hot",
+      "status":"CANCELED",
+      "menuSh":[
                 {
-                    "id":5,
-                    "menu":{"id":1,"name":"Svinnaya","price":140},
-                    "count":3,
-                    "shaurmaSize":"MINI",
-                    "additivs":[{
-                                    "comtable_id":5,
-                                    "ingredientId":5,
-                                    "count":1,
-                                    "ing":{"id":5,"name":"Pepper","price":15}
+                  "menu":{"id":3},
+                  "count":1,
+                  "shaurmaSize":"STANDART",
+                  "additivs":[{
+                                    "ingid":5,
+                                    "count":1
                                 },
                                 {
-                                    "comtable_id":5,
-                                    "ingredientId":2,
-                                    "count":5,
-                                    "ing":{"id":2,"name":"Pork","price":50}
+                                    "ingid":2,
+                                    "count":5
                                 }]
                 },
                 {
-                    "id":6,
-                    "menu":{"id":2,"name":"Kyryinaya","price":120},
-                    "count":50,
-                    "shaurmaSize":"MINI",
-                    "additivs":[{
-                        "comtable_id":6,
-                        "ingredientId":2,
-                        "count":35,
-                        "ing":{"id":1,"name":"Chiken","price":30}
-                    }]
-                }]
+                  "menu":{"id":2},
+                  "count":1,
+                  "shaurmaSize":"STANDART",
+                  "additivs":[{
+                                "ingid":1,
+                                "count":35
+                  }]
+                },
+        		{
+                  "menu":{"id":4},
+                  "count":440,
+                  "shaurmaSize":"STANDART",
+                  "additivs":[]
+                }
+    
+              ]
     }
-    }
+    
     */ 
     @PUT 
     @Path("/putStatusOrd") 
-    public Response upOrderStatus(CustomOrder_DTOStatus ord){
-        CustomOrder_DTOStatus ordStat = ordServ.upOrderStatus(ord);
+    public Response upOrderStatus(CustomOrderDTOStatus ord){
+        CustomOrderDTOStatus ordStat = ordServ.upOrderStatus(ord);
         return ordStat==null?Response.serverError().build():Response.ok(ordStat).build();
     }// http://localhost:8080/ShaurmaR/order/putStatusOrd
     /*

@@ -1,16 +1,18 @@
 
 package mera.shaurmar.dto;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import mera.shaurmar.model.Ingredient;
-import mera.shaurmar.model.Menu;
 
 
 public class IngredientDTO {
+    //@Null
     public Long id;
+    @NotNull
     public String name;
-    public Float price;
+    @NotNull
+    public double price;
 
     public IngredientDTO(Ingredient ing) {
         this.id = ing.getId();

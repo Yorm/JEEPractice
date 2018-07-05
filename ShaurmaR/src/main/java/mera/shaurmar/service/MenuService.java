@@ -1,13 +1,14 @@
 
 package mera.shaurmar.service;
 
+import java.util.ArrayList;
 import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
 import mera.shaurmar.dao.DBService;
 import mera.shaurmar.model.Menu;
 import mera.shaurmar.dto.MenuDTO;
+import mera.shaurmar.model.Ingredient;
 
 @Named
 @ApplicationScoped
@@ -17,13 +18,23 @@ public class MenuService extends Service{
         log = LoggerFactory.getLogger(MenuService.class);
         db = new DBService();
     }
+    
+    public ArrayList<Menu> getAll(){
+        log.debug("Get all menu!!!");
+        ArrayList<Menu> menus = db.getAll(
+                new ArrayList<Menu>(){{
+                    add(new Menu());
+                }});
+        return menus==null?null:menus;
+    }
+    
+    
     public Menu saveMenu(MenuDTO shDto){
-        
         Menu sh = new Menu();
         sh.setName(shDto.name);
         sh.setPrice(shDto.price);
         
-        log.info("Save menu pos ");
+        log.debug("Save menu pos ");
         return db.saveMenu(sh);
     }
     public Menu updateMenu(MenuDTO shDto){
@@ -32,16 +43,16 @@ public class MenuService extends Service{
         sh.setName(shDto.name);
         sh.setPrice(shDto.price);
         
-        log.info("Update menu pos");
+        log.debug("Update menu pos");
         return (Menu)db.updateObj(sh, sh.getId());
     }
     public MenuDTO getMenu(Long id){
-        log.info("Get menu pos"); 
+        log.debug("Get menu pos"); 
         Menu m = db.findObj(new Menu(), id);
         return m==null?null:new MenuDTO(m);
     }
     public boolean delMenu(Long id){
-        log.info("Delete menu pos");
+        log.debug("Delete menu pos");
         return db.deleteObj(new Menu(), id);
     }
 }

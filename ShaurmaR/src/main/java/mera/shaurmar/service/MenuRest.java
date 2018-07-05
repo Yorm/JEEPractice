@@ -1,14 +1,17 @@
 
 package mera.shaurmar.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.ws.rs.*;
 import javax.ws.rs.Path;
 import javax.inject.Inject;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
-import mera.shaurmar.model.Menu;
 import mera.shaurmar.dto.MenuDTO;
+import mera.shaurmar.model.Ingredient;
+import mera.shaurmar.model.Menu;
 
 @Stateless
 @Path("/menu")
@@ -17,6 +20,16 @@ import mera.shaurmar.dto.MenuDTO;
 public class MenuRest {
     @Inject
     MenuService menuServ;
+    
+    @GET
+    @Path("/getAll")
+    public Response getMenus(){ 
+        ArrayList<Menu> result = menuServ.getAll();
+        if(result == null) return Response.serverError().build();  
+        
+        GenericEntity<List<Menu>> list = new GenericEntity<List<Menu>>(result) {};
+        return Response.ok(list.toString()).build();
+    }//http://localhost:8080/ShaurmaR/menu/getAll
     
     @GET
     @Path("/get")

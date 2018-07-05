@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @SequenceGenerator(name="ing_seq",sequenceName="ing_seq", allocationSize=1,initialValue = 1)
@@ -14,20 +15,24 @@ public class Ingredient implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="ing_seq")
     private long id;
+    //@Column(nullable = false)
+    //@NotNull
     private String name;
-    private Float price;
+    //@Column(nullable = false)
+    //@NotNull
+    private double price;
     
     @OneToMany(mappedBy="ing"/*, cascade = CascadeType.PERSIST*/)
-    private List<CustomOrderMenu_Ingredient> orders = new ArrayList<>();;
+    private List<CustomOrderMenuIngredient> orders = new ArrayList<>();;
     
     public Ingredient(){}
 
-    public Ingredient(String name, Float price) {
+    public Ingredient(String name, double price) {
         this.name = name;
         this.price = price;
     }
 
-    public Ingredient(long id, String name, Float price) {
+    public Ingredient(long id, String name, double price) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -39,7 +44,7 @@ public class Ingredient implements Serializable {
         this.price = i.getPrice();
     }
 
-    public void addOrder(CustomOrderMenu_Ingredient ord){
+    public void addOrder(CustomOrderMenuIngredient ord){
         orders.add(ord);  
     }
 
@@ -59,20 +64,20 @@ public class Ingredient implements Serializable {
         this.name = name;
     }
 
-    public Float getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(Float price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
 
-    public List<CustomOrderMenu_Ingredient> getOrders() {
+    public List<CustomOrderMenuIngredient> getOrders() {
         return orders;
     }
 
-    public void setOrders(List<CustomOrderMenu_Ingredient> orders) {
+    public void setOrders(List<CustomOrderMenuIngredient> orders) {
         this.orders = orders;
     }
 
@@ -117,7 +122,7 @@ public class Ingredient implements Serializable {
 
     @Override
     public String toString() {
-        return "Ingredient{" + "id=" + id + ", name=" + name + ", price=" + price + ", orders=" + orders + '}';
+        return "Ingredient{" + "id=" + id + ", name=" + name + ", price=" + price  + '}';
     }
     
 

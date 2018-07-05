@@ -1,7 +1,7 @@
 package mera.shaurmar.service;
 
+import java.util.ArrayList;
 import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
 import mera.shaurmar.dao.DBService;
@@ -18,7 +18,7 @@ public class IngredientService  extends Service{
     }
     
     public Ingredient saveIng(IngredientDTO ingDto){
-        log.info("Save ingredient");
+        log.debug("Save ingredient");
         return db.saveIngredient(new Ingredient(ingDto.name, ingDto.price));
     }
     public Ingredient updateIng(IngredientDTO ingDto){
@@ -27,17 +27,26 @@ public class IngredientService  extends Service{
         ing.setName(ingDto.name);
         ing.setPrice(ingDto.price);
         
-        log.info("Update ingredient");
+        log.debug("Update ingredient");
         return (Ingredient)db.updateObj(ing, ing.getId());
+    }
+    
+    public ArrayList<Ingredient> getAll(){
+        log.debug("Get all ingredients");
+        ArrayList<Ingredient> ings = db.getAll(
+                new ArrayList<Ingredient>(){{
+                    add(new Ingredient());
+                }});
+        return ings==null?null:ings;
     }
     
     public IngredientDTO getIng(Long id){
         Ingredient ing = db.findObj(new Ingredient(), id);
-         log.info("Get ingredient");
+        log.debug("Get ingredient");
         return ing==null?null:new IngredientDTO(ing);
     }
     public boolean delIng(Long id){
-        log.info("Delete ingredient");
+        log.debug("Delete ingredient");
         return db.deleteObj(new Ingredient(), id);
     }  
 }

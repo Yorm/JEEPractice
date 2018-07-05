@@ -1,15 +1,19 @@
 package mera.shaurmar.model;
 
 import java.io.Serializable;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -17,6 +21,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 
 
 @Entity
@@ -35,22 +40,27 @@ public class CustomOrder  implements Serializable{
     private Status status = Status.NEW;
     
     @Temporal(TemporalType.TIMESTAMP)
-    private java.util.Date creationDate;
+    @Convert(converter = ZonedDateTimeConverter.class)
+    private ZonedDateTime creationDate;
     
+    //@Column(nullable = false)
+    //@NotNull
     private String buyer;
 
     private String note;
     
-    private Float sum;
+    //@Column(nullable = false)
+    //@NotNull
+    private double sum;
     
-    @OneToMany(mappedBy="cusorder")
-    private List<CustomOrder_Menu> menu  = new ArrayList<>();
+    @OneToMany(mappedBy="cusorder",fetch = FetchType.EAGER/*, cascade = CascadeType.REMOVE, orphanRemoval = true*/)
+    private List<CustomOrderMenu> menu  = new ArrayList<>();
     
     
     public CustomOrder(){
     }
     
-    public CustomOrder(Date creationDate, String buyer, String note, Float sum, Status status) {
+    public CustomOrder(ZonedDateTime creationDate, String buyer, String note, double sum, Status status) {
         this.creationDate = creationDate;
         this.buyer = buyer;
         this.note = note;
@@ -58,11 +68,11 @@ public class CustomOrder  implements Serializable{
         this.status = status;
     }
 
-    public List<CustomOrder_Menu> getMenu() {
+    public List<CustomOrderMenu> getMenu() {
         return menu;
     }
 
-    public void setMenu(List<CustomOrder_Menu> menu) {
+    public void setMenu(List<CustomOrderMenu> menu) {
         this.menu = menu;
     }
 
@@ -123,11 +133,11 @@ public class CustomOrder  implements Serializable{
 
 
     
-    public Date getCreationDate() {
+    public ZonedDateTime getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(Date creationDate) {
+    public void setCreationDate(ZonedDateTime creationDate) {
         this.creationDate = creationDate;
     }
 
@@ -147,11 +157,11 @@ public class CustomOrder  implements Serializable{
         this.note = note;
     }
 
-    public Float getSum() {
+    public double getSum() {
         return sum;
     }
 
-    public void setSum(Float sum) {
+    public void setSum(double sum) {
         this.sum = sum;
     }
 
