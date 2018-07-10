@@ -37,20 +37,21 @@ public class OrderRest {
         if(result == null) return Response.serverError().build();  
         
         GenericEntity<List<CustomOrder>> list = new GenericEntity<List<CustomOrder>>(result) {};
-        return Response.ok(list.toString()).build();
+        return Response.ok(list).build();
     }//http://localhost:8080/ShaurmaR/order/getAll
     
     @GET
     @Path("/getOrd")
     public Response getOrder(@QueryParam("id") long id){   
-        CustomOrderUpdateDTO ord = ordServ.getOrder(id);
-        return ord==null?Response.serverError().build():Response.ok(ord).build();
+        CustomOrder order = ordServ.getOrder(id);
+        return order==null?Response.serverError().build():Response.ok(order).build();
     }//http://localhost:8080/ShaurmaR/order/getOrd?id=1 
     
     @POST 
     @Path("/addOrd") 
-    public Response addOrder(CustomOrderDTO ordDto){    
-        return ordServ.saveOrder(ordDto)==null?Response.serverError().build():Response.ok(ordDto).build();
+    public Response addOrder(CustomOrderDTO ordDto){
+        CustomOrder order = ordServ.saveOrder(ordDto);
+        return order==null?Response.serverError().build():Response.ok(order).build();
     }/* http://localhost:8080/ShaurmaR/order/addOrd
     
     {   
@@ -63,11 +64,11 @@ public class OrderRest {
                     "shaurmaSize":"MINI",
                     "additivs":[{
                                     "count":1,
-                                    "ing":{"id":5}
+                                    "ingid":5
                                 },
                                 {
                                     "count":5,
-                                    "ing":{"id":2}
+                                    "ingid":2
                                 }]
                 },
                 {
@@ -76,13 +77,12 @@ public class OrderRest {
                     "shaurmaSize":"VIP",
                     "additivs":[{
                         "count":35,
-                        "ing":{"id":1}
+                        "ingid":1
                     }]
                 }]
     }
     */
  
-    //TODO
     @PUT 
     @Path("/putOrd") 
     public String upOrder(CustomOrderDTO ord){
@@ -130,7 +130,7 @@ public class OrderRest {
     @PUT 
     @Path("/putStatusOrd") 
     public Response upOrderStatus(CustomOrderDTOStatus ord){
-        CustomOrderDTOStatus ordStat = ordServ.upOrderStatus(ord);
+        CustomOrder ordStat = ordServ.upOrderStatus(ord);
         return ordStat==null?Response.serverError().build():Response.ok(ordStat).build();
     }// http://localhost:8080/ShaurmaR/order/putStatusOrd
     /*

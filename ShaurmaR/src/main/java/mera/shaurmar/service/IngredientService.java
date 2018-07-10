@@ -6,6 +6,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
 import mera.shaurmar.dao.DBService;
 import mera.shaurmar.dto.IngredientDTO;
+import mera.shaurmar.model.CustomOrderMenuIngredient;
 import mera.shaurmar.model.Ingredient;
 
 @Named
@@ -37,7 +38,11 @@ public class IngredientService  extends Service{
                 new ArrayList<Ingredient>(){{
                     add(new Ingredient());
                 }});
-        return ings==null?null:ings;
+        if(ings==null) return null;
+        for(int i=0;i<ings.size();i++){
+            ings.get(i).setOrders(new ArrayList<CustomOrderMenuIngredient>());
+        }
+        return ings;
     }
     
     public IngredientDTO getIng(Long id){

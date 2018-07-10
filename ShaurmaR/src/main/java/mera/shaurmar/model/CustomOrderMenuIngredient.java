@@ -8,10 +8,12 @@ import javax.persistence.IdClass;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
+import org.eclipse.persistence.annotations.CascadeOnDelete;
 
 @Entity
 @Table(name="CustomOrderMenu_Ingredient")
 @IdClass(COMIKey.class)
+@CascadeOnDelete
 public class CustomOrderMenuIngredient implements Serializable{
     private static final long serialVersionUID = 15L;
 
@@ -73,15 +75,18 @@ public class CustomOrderMenuIngredient implements Serializable{
         this.ing = ing;
     }
 
-    @Override
-    public String toString() {
-        return "CustomOrderMenuIngredient{" + "comtable_id=" + comtable_id + ", ingredientId=" + ingredientId + ", count=" + count + '}';
-    }
-
     /*@Override
     public String toString() {
-        return "CustomOrderMenuIngredient{" + "comtable_id=" + comtable_id + ", ingredientId=" + ingredientId + ", count=" + count + ", com=" + com + ", ing=" + ing + '}';
+        return "CustomOrderMenuIngredient{" + "comtable_id=" + comtable_id + ", ingredientId=" + ingredientId + ", count=" + count + '}';
     }*/
+
+    @Override
+    public String toString() {
+        return "CustomOrderMenuIngredient{" + "comtable_id=" + comtable_id + ", ingredientId=" + ingredientId + ", count=" + count + /*", com=" + com +*/ ", ing=" + ing + '}';
+    }
+    
+
+   
     
 
     

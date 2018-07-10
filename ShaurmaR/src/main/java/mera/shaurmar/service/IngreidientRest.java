@@ -28,8 +28,8 @@ public class IngreidientRest {
         if(ing == null) return Response.serverError().build();  
         
         GenericEntity<List<Ingredient>> list = new GenericEntity<List<Ingredient>>(ing) {};
-        return Response.ok(list.toString()).build();
-    }
+        return Response.ok(list).build();
+    }//http://localhost:8080/ShaurmaR/ingreidient/getAll
     
     @GET
     @Path("/get")
@@ -49,7 +49,8 @@ public class IngreidientRest {
     @POST 
     @Path("/addIng") 
     public Response addIngredient(IngredientDTO ingDto){    
-        return ingServ.saveIng(ingDto)==null?Response.serverError().build():Response.ok(ingDto).build();
+        Ingredient ing = ingServ.saveIng(ingDto);
+        return ing==null?Response.serverError().build():Response.ok(ing).build();
     }/* http://localhost:8080/ShaurmaR/ingreidient/addIng
         {
             "id":100,

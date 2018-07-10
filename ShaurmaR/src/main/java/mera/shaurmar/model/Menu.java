@@ -95,10 +95,16 @@ public class Menu implements Serializable {
         return true;
     }
 
-    @Override
+    /*@Override
     public String toString() {
         return "Menu{" + "id=" + id + ", name=" + name + ", price=" + price + '}';
+    }*/
+
+    @Override
+    public String toString() {
+        return "Menu{" + "id=" + id + ", name=" + name + ", price=" + price + ", orders=" + orders + '}';
     }
+    
 
     public double getPrice() {
         return price;

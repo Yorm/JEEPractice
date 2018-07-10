@@ -120,10 +120,16 @@ public class Ingredient implements Serializable {
         return true;
     }
 
-    @Override
+    /*@Override
     public String toString() {
         return "Ingredient{" + "id=" + id + ", name=" + name + ", price=" + price  + '}';
+    }*/
+
+    @Override
+    public String toString() {
+        return "Ingredient{" + "id=" + id + ", name=" + name + ", price=" + price + ", orders=" + orders + '}';
     }
+    
     
 
 }

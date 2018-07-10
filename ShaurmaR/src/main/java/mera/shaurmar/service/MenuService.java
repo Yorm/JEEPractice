@@ -8,6 +8,8 @@ import javax.inject.Named;
 import mera.shaurmar.dao.DBService;
 import mera.shaurmar.model.Menu;
 import mera.shaurmar.dto.MenuDTO;
+import mera.shaurmar.model.CustomOrderMenu;
+import mera.shaurmar.model.CustomOrderMenuIngredient;
 import mera.shaurmar.model.Ingredient;
 
 @Named
@@ -25,17 +27,18 @@ public class MenuService extends Service{
                 new ArrayList<Menu>(){{
                     add(new Menu());
                 }});
-        return menus==null?null:menus;
+        
+        if(menus==null) return null;
+        for(int i=0;i<menus.size();i++){
+            menus.get(i).setOrders(new ArrayList<CustomOrderMenu>());
+        }
+        return menus;
     }
     
     
     public Menu saveMenu(MenuDTO shDto){
-        Menu sh = new Menu();
-        sh.setName(shDto.name);
-        sh.setPrice(shDto.price);
-        
         log.debug("Save menu pos ");
-        return db.saveMenu(sh);
+        return db.saveMenu(new Menu(shDto.name,shDto.price));
     }
     public Menu updateMenu(MenuDTO shDto){
         Menu sh = new Menu();

@@ -22,6 +22,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
+import org.eclipse.persistence.annotations.CascadeOnDelete;
 
 
 @Entity
@@ -29,6 +30,7 @@ import javax.validation.constraints.NotNull;
 @SequenceGenerator(name="ord_seq",
         sequenceName="ord_seq", 
         allocationSize=1,initialValue = 1)
+@CascadeOnDelete
 public class CustomOrder  implements Serializable{
     private static final long serialVersionUID = 3L;
     
@@ -54,6 +56,7 @@ public class CustomOrder  implements Serializable{
     private double sum;
     
     @OneToMany(mappedBy="cusorder",fetch = FetchType.EAGER/*, cascade = CascadeType.REMOVE, orphanRemoval = true*/)
+    @CascadeOnDelete
     private List<CustomOrderMenu> menu  = new ArrayList<>();
     
     
@@ -125,10 +128,16 @@ public class CustomOrder  implements Serializable{
         return true;
     }
 
+    /*@Override
+    public String toString() {
+        return "CustomOrder{" + "id=" + id + ", status=" + status + ", creationDate=" + creationDate + ", buyer=" + buyer + ", note=" + note + ", sum=" + sum + ", menu=" + menu + '}';
+    }*/
+
     @Override
     public String toString() {
         return "CustomOrder{" + "id=" + id + ", status=" + status + ", creationDate=" + creationDate + ", buyer=" + buyer + ", note=" + note + ", sum=" + sum + ", menu=" + menu + '}';
     }
+    
 
 
 

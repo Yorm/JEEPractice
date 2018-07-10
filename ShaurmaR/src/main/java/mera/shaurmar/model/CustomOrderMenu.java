@@ -19,10 +19,12 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import org.eclipse.persistence.annotations.CascadeOnDelete;
 
 @Entity
 @Table(name="CustomOrder_Menu")
 @SequenceGenerator(name="com_seq",sequenceName="com_seq", allocationSize=1,initialValue = 1)
+@CascadeOnDelete
 public class CustomOrderMenu implements Serializable{
     private static final long serialVersionUID = 9L;
     
@@ -38,6 +40,7 @@ public class CustomOrderMenu implements Serializable{
     private ShaurmaSize shaurmaSize;
     
     @OneToMany(mappedBy="com",fetch = FetchType.EAGER/*, cascade = CascadeType.REMOVE, orphanRemoval = true*/)
+    @CascadeOnDelete
     private List<CustomOrderMenuIngredient> additivs  = new ArrayList<>();
     
     
@@ -96,10 +99,16 @@ public class CustomOrderMenu implements Serializable{
         return true;
     }
 
-    @Override
+    /*@Override
     public String toString() {
         return "CustomOrderMenu{" + "id=" + id  + ", count=" + count + ", shaurmaSize=" + shaurmaSize + ", additivs=" + additivs +", cusorder_id=" + cusorder.getId() + ", menu=" + menuItem + '}';
+    }*/
+
+    @Override
+    public String toString() {
+        return "CustomOrderMenu{" + "id=" + id + ", count=" + count + ", shaurmaSize=" + shaurmaSize + ", additivs=" + additivs + /*", cusorder=" + cusorder +*/ ", menuItem=" + menuItem + '}';
     }
+    
 
     public CustomOrder getCusorder() {
         return cusorder;

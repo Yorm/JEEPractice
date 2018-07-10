@@ -58,6 +58,33 @@ public class DBService {
         }
     }
     
+    public <T> T findObj(T cls, long id) {
+        T obj;
+        try {
+            obj = (T) em.find(cls.getClass(), id);
+            return obj;
+        } catch (Exception ex) {
+            log.error("Exception: ", ex);
+            return null;
+        }
+    }
+
+    public <T> boolean deleteObj(T cls, Long id) {
+        T obj = null;
+        try {
+            em.getTransaction().begin();
+            obj = (T) em.find(cls.getClass(), id);
+            if (obj != null) {
+                em.remove(obj);
+            }
+            em.getTransaction().commit();
+        } catch (Exception ex) {
+            log.error("Exception: ", ex);
+            em.getTransaction().rollback();
+        }
+        return obj != null;
+    }
+    
    public <T> ArrayList<T> getAll(ArrayList<T> objs){
         String className = objs.get(0).getClass().getName().substring(20, objs.get(0).getClass().getName().length());
         Query query = em.createQuery("Select com FROM "+className+" com");
@@ -73,10 +100,10 @@ public class DBService {
         return result;
     }
     
-    public CustomOrderDTOStatus updateOrderStatus(CustomOrderDTOStatus ordDto) {
+    public boolean updateOrderStatus(CustomOrderDTOStatus ordDto) {
         CustomOrder order = (CustomOrder) findObj(new CustomOrder(), ordDto.id);
         order.setStatus(ordDto.status);
-        return updateObj(order, order.getId()) == null ? null : ordDto;
+        return updateObj(order, order.getId()) != null;
     }
 
     public CustomOrder updateOrder(CustomOrderDTO ordDto) {
@@ -106,7 +133,6 @@ public class DBService {
             if(!deleteObj(new CustomOrderMenu(), menu.get(i).getId())) return null;
         }
         
-        double sum = 0;
         if(ordDto.note.equals(order.getNote())){
             order.setStatus(ordDto.status);
         }
@@ -114,16 +140,25 @@ public class DBService {
             order.setStatus(ordDto.status);
         }
         
-        List<CustomOrderMenu> comList  = new ArrayList<>();
+        order.setMenu(getCustomOrderMenuList(ordDto,order));
+        
+        
+        return updateObj(order, order.getId()) == null ? null : order;
+    }
+    
+    public ArrayList<CustomOrderMenu> getCustomOrderMenuList(CustomOrderDTO ordDto,CustomOrder order){
+        ArrayList<CustomOrderMenu> comList  = new ArrayList<>();
+        order.setSum(0);
+        long comId = ((long)em.createNativeQuery("select nextval('public.com_seq')").getSingleResult() + 1);//'+1' - because when you apply - it is incremented
         for(CustomOrderMenuDTO comDto: ordDto.menuSh){
             CustomOrderMenu com = new CustomOrderMenu();
-            com.setId((long) em.createNativeQuery("select nextval('public.com_seq')").getSingleResult() + 1);//'+1' - because when you apply - it is incremented
+            comId++;
+            com.setId(comId);
             com.setCount(comDto.count);
             com.setMenuItem((Menu)findObj(new Menu(), comDto.menu.id));  
-                sum+=com.getMenuItem().getPrice()*com.getCount();
+                order.setSum(order.getSum()+com.getMenuItem().getPrice()*(com.getCount()==0?1:com.getCount()));
             com.setShaurmaSize(comDto.shaurmaSize);
             com.setCusorder(order);
-            
             List<CustomOrderMenuIngredient> comiList  = new ArrayList<>();
             for(CustomOrderMenuIngredientDTO comiDto: comDto.additivs){
                 CustomOrderMenuIngredient comi = new CustomOrderMenuIngredient();
@@ -132,44 +167,20 @@ public class DBService {
                 comi.setCount(comiDto.count);
                 comi.setIng((Ingredient)findObj(new Ingredient(), comiDto.ingid));
                 comi.setCom(com);
-                    sum+=comi.getIng().getPrice()*comi.getCount();
-                comiList.add(comi);       
+                    order.setSum(order.getSum()+comi.getIng().getPrice()*(comi.getCount()==0?1:comi.getCount()));
+                comiList.add(comi);   
+                //---------------------------------
+                comi = new CustomOrderMenuIngredient();
             }
             com.setAdditivs(comiList);
             comList.add(com);
+            //---------------------------------
+            com = new CustomOrderMenu();
         }
-        order.setMenu(comList);
-        order.setSum(sum);
-        
-        return updateObj(order, order.getId()) == null ? null : order;
+        return comList;
     }
+    
 
-    public <T> T findObj(T cls, long id) {
-        T obj;
-        try {
-            obj = (T) em.find(cls.getClass(), id);
-            return obj;
-        } catch (Exception ex) {
-            log.error("Exception: ", ex);
-            return null;
-        }
-    }
-
-    public <T> boolean deleteObj(T cls, Long id) {
-        T obj = null;
-        try {
-            em.getTransaction().begin();
-            obj = (T) em.find(cls.getClass(), id);
-            if (obj != null) {
-                em.remove(obj);
-            }
-            em.getTransaction().commit();
-        } catch (Exception ex) {
-            log.error("Exception: ", ex);
-            em.getTransaction().rollback();
-        }
-        return obj != null;
-    }
 
     public boolean deleteOrder(long id) {
         //get ord
@@ -228,79 +239,32 @@ public class DBService {
 
     public CustomOrder orderDTOtoOrder(CustomOrderDTO ordDto) {
         CustomOrder order = new CustomOrder();
-
-        double sum = 0f;
+        order.setId((long) em.createNativeQuery("select nextval('public.ord_seq')").getSingleResult() + 1);//'+1' - because when you apply - it is incremented
         order.setBuyer(ordDto.buyer);
         order.setNote(ordDto.note);
         order.setCreationDate(ZonedDateTime.now());
         order.setStatus(Status.NEW);
-
-        List<CustomOrderMenu> comList = new ArrayList<>();
-        for (CustomOrderMenuDTO comDto : ordDto.menuSh) {
-            CustomOrderMenu comItem = new CustomOrderMenu();
-            comItem.setCount(comDto.count);
-            comItem.setShaurmaSize(comDto.shaurmaSize);
-            comItem.setCusorder(order);
-
-            Menu m = (Menu) findObj(new Menu(), comDto.menu.id);
-            if (m == null) {
-                return null;
-            }
-
-            comItem.setMenuItem(m);
-            sum += m.getPrice() * (comItem.getCount() == 0 ? 1 : comItem.getCount());
-
-            Query q = em.createNativeQuery("select nextval('public.com_seq')");
-            long seqValue = (long) q.getSingleResult() + 1;//'+1' - because when you apply - it is incremented
-
-            comItem.setId(seqValue);
-
-            List<CustomOrderMenuIngredient> comiList = new ArrayList<>();
-            for (CustomOrderMenuIngredientDTO comiDto : comDto.additivs) {
-                CustomOrderMenuIngredient comiItem = new CustomOrderMenuIngredient();
-                comiItem.setCount(comiDto.count);
-                comiItem.setCom(comItem);
-                comiItem.setComtable_id(seqValue);
-
-                Ingredient ing = (Ingredient) findObj(new Ingredient(), comiDto.ing.id);
-
-                if (ing == null) {
-                    return null;
-                }
-                comiItem.setIngredientId(ing.getId());
-                ing.addOrder(comiItem);
-                sum += ing.getPrice() * (comiItem.getCount() == 0 ? 1 : comiItem.getCount());
-                comiItem.setIng(ing);
-
-                comiList.add(comiItem);
-
-            }
-            comItem.setAdditivs(comiList);
-
-            comList.add(comItem);
-        }
-
-        order.setMenu(comList);
-        order.setSum(sum);
-
+        order.setMenu(getCustomOrderMenuList(ordDto,order));
+        System.out.println(order);
         return order;
     }
 
-    public CustomOrderDTO saveOrder(CustomOrderDTO ordDto) {
+    public CustomOrder saveOrder(CustomOrderDTO ordDto) {
         CustomOrder order = orderDTOtoOrder(ordDto);
-        if (order == null) {
+        if (order == null) {//TODO ???
             return null;
         }
         try {
             em.getTransaction().begin();
             em.merge(order);
             em.getTransaction().commit();
-            return ordDto;
+            
         } catch (Exception ex) {
             log.error("Exception: ", ex);
             em.getTransaction().rollback();
             return null;
         }
+        return order;
     }
 
     public Menu saveMenu(Menu m) {
@@ -311,7 +275,7 @@ public class DBService {
             log.error("Menu " + m.getName() + " already exists");
             return null;
         }
-
+        m.setId((long) em.createNativeQuery("select nextval('public.menu_seq')").getSingleResult() + 1);//'+1' - because when you apply - it is incremented
         try {
             em.getTransaction().begin();
             em.merge(m);
@@ -326,12 +290,12 @@ public class DBService {
     public Ingredient saveIngredient(Ingredient ing) {
         Query query = em.createQuery("Select ing FROM Ingredient ing WHERE ing.name = :name");
         query.setParameter("name", ing.getName());
-
+        
         if (!query.getResultList().isEmpty()) {
             log.error("ingredient " + ing.getName() + " already exists");
             return null;
         }
-
+        ing.setId((long) em.createNativeQuery("select nextval('public.ing_seq')").getSingleResult() + 1);//'+1' - because when you apply - it is incremented
         try {
             em.getTransaction().begin();
             em.merge(ing);

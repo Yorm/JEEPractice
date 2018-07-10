@@ -28,7 +28,7 @@ public class MenuRest {
         if(result == null) return Response.serverError().build();  
         
         GenericEntity<List<Menu>> list = new GenericEntity<List<Menu>>(result) {};
-        return Response.ok(list.toString()).build();
+        return Response.ok(list).build();
     }//http://localhost:8080/ShaurmaR/menu/getAll
     
     @GET
@@ -47,7 +47,8 @@ public class MenuRest {
     @POST 
     @Path("/addMenu") 
     public Response addMenu(MenuDTO shDto){  
-        return menuServ.saveMenu(shDto)==null?Response.serverError().build():Response.ok(shDto).build(); 
+        Menu m = menuServ.saveMenu(shDto);
+        return m==null?Response.serverError().build():Response.ok(m).build(); 
     }/* 
     http://localhost:8080/ShaurmaR/menu/addMenu
     {

@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<entity-mappings xmlns="http://www.eclipse.org/eclipselink/xsds/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.2">
+    <cascade-on-delete>true</cascade-on-delete>
+</entity-mappings>
